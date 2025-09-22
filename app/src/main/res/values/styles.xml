@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.Recipes.BottomNav.ActiveIndicator">
+        <!-- tamaño e insets opcionales -->
+        <item name="android:width">64dp</item>
+        <item name="android:height">32dp</item>
+        <item name="android:insetLeft">8dp</item>
+        <item name="android:insetRight">8dp</item>
+        <item name="android:insetTop">4dp</item>
+        <item name="android:insetBottom">4dp</item>
+
+        <!-- forma redondeada completa -->
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Full</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Material3.Corner.Bottom</item>
+
+        <!-- color de la “pastilla” -->
+        <item name="android:color">?attr/colorSecondaryContainer</item>
+    </style>
+
+    <!-- Estilo del BottomNavigationView de tu app -->
+    <style name="Widget.Recipes.BottomNav" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemIconTint">@color/bnv_item_icon_tint</item>
+        <item name="itemTextColor">@color/bnv_item_text_tint</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.Recipes.BottomNav.ActiveIndicator</item>
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="elevation">8dp</item>
+    </style>
+</resources>
