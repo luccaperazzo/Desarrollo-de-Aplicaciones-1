@@ -51,7 +51,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Lista de recetas -->
-            <!-- RecyuclerView es un widget optimizado para para listar elementos -->
+            <!-- RecyclerView es un widget para para listar elementos -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvRecipes"
                 android:layout_width="match_parent"

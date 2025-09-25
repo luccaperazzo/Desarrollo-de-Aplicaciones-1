@@ -55,15 +55,25 @@ public class LoginActivity extends AppCompatActivity {
 
         // Click en Login
         btnLogin.setOnClickListener(v -> {
-                hideKeyboard(v);
-                Toast.makeText(this, "Logueado!", Toast.LENGTH_SHORT).show();
+            String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
+            String pass = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
 
-                // Lógica de login mock
-                getSharedPreferences("auth", MODE_PRIVATE).edit()
-                        .putBoolean("logged_in", true)
-                        .apply();
-                startActivity(new Intent(this, HomeActivity.class));
-                finish(); // evita volver al login con back
+            // TODO: chequeo con el back de mail y pass
+
+            if (email.equals("error")) {
+                Toast.makeText(this, "Credenciales inválidas!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Lógica de login exitoso mock
+            hideKeyboard(v);
+            Toast.makeText(this, "Logueado!", Toast.LENGTH_SHORT).show();
+
+            getSharedPreferences("auth", MODE_PRIVATE).edit()
+                    .putBoolean("logged_in", true)
+                    .apply();
+            startActivity(new Intent(this, HomeActivity.class));
+            finish(); // evita volver al login con back
         });
 
         // Click en Registro
