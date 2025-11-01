@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">UADE Recipes App</string>
+
+    <!-- RegisterActivity -->
+    <string name="register_title">Crear Cuenta</string>
+    <string name="register_hint_username">Usuario</string>
+    <string name="register_hint_full_name">Nombre Completo</string>
+    <string name="register_hint_email">Email</string>
+    <string name="register_hint_password">Contraseña</string>
+    <string name="register_hint_confirm_password">Confirmar contraseña</string>
+    <string name="register_btn_select_profile_image">Seleccionar foto de perfil (opcional)</string>
+    <string name="register_profile_image_selected">Foto seleccionada ✓</string>
+    <string name="register_checkbox_terms">Acepto los Términos y Condiciones</string>
+    <string name="register_btn_register">Registrarme</string>
+    <string name="register_btn_already_have_account">Ya tengo cuenta</string>
+    <string name="register_error_passwords_dont_match">Las contraseñas no coinciden</string>
+    <string name="register_error_invalid_email">Email inválido</string>
+    <string name="register_error_invalid_password">La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número</string>
+    <string name="register_success">Registro exitoso! Puedes iniciar sesión.</string>
+    <string name="register_error_title">Error al registrar</string>
+    <string name="register_error_network">Error de red. Verifique su conexión.</string>
+    <string name="register_dialog_select_image_title">Seleccionar imagen</string>
+    <string name="register_dialog_option_camera">Cámara</string>
+    <string name="register_dialog_option_gallery">Galería</string>
+    <string name="register_error_permission_denied">Permiso requerido para seleccionar imagen</string>
+    <string name="register_error_processing_image">Error al procesar imagen</string>
+    <string name="register_msg_returning_to_login">Volviendo al login</string>
 </resources>

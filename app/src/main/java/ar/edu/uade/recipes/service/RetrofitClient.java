@@ -2,9 +2,11 @@ package ar.edu.uade.recipes.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -15,6 +17,13 @@ public class RetrofitClient {
 
     public static Retrofit getRetrofitInstance(Context context) {
         if (retrofit == null) {
+            // Interceptor de logging para monitorear requests/responses
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(message -> {
+                Log.d("Retrofit", message);
+            });
+            // Mostrar logs completos (cambiar a NONE en producción)
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(chain -> {
                         Request original = chain.request();
@@ -29,6 +38,7 @@ public class RetrofitClient {
 
                         return chain.proceed(builder.build());
                     })
+                    .addInterceptor(loggingInterceptor)
                     .build();
 
             retrofit = new retrofit2.Retrofit.Builder()
