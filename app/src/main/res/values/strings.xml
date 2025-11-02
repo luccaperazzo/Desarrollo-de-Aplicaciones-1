@@ -25,4 +25,28 @@
     <string name="register_error_permission_denied">Permiso requerido para seleccionar imagen</string>
     <string name="register_error_processing_image">Error al procesar imagen</string>
     <string name="register_msg_returning_to_login">Volviendo al login</string>
+
+    <!-- Empty States -->
+    <string name="empty_state_title">No hay recetas</string>
+    <string name="empty_state_message">No se encontraron recetas</string>
+    <string name="empty_state_no_results">No se encontraron resultados para tu búsqueda</string>
+    <string name="empty_state_no_favorites">Aún no tienes recetas favoritas</string>
+    <string name="empty_state_no_my_recipes">Aún no has creado ninguna receta</string>
+
+    <!-- Error States -->
+    <string name="error_state_title">Error de conexión</string>
+    <string name="error_state_message">No se pudieron cargar las recetas</string>
+    <string name="error_state_retry">Reintentar</string>
+    <string name="error_state_offline_with_cache">Sin conexión. Mostrando recetas guardadas.</string>
+    <string name="error_state_offline_no_cache">Sin conexión y no hay recetas guardadas.</string>
+
+    <!-- HomeActivity -->
+    <string name="home_title_explore">Explorar</string>
+    <string name="home_title_my_recipes">Mis Recetas</string>
+    <string name="home_title_favorites">Favoritas</string>
+    <string name="home_search_hint">Buscar recetas…</string>
+    <string name="home_fab_add_recipe">Agregar receta (mock)</string>
+
+    <!-- Recipe Item -->
+    <string name="recipe_author_prefix">Por: %1$s</string>
 </resources>
