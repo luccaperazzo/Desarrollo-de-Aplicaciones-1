@@ -24,6 +24,9 @@ import ar.edu.uade.recipes.fragment.FavoritesFragment;
 import ar.edu.uade.recipes.fragment.MyRecipesFragment;
 import ar.edu.uade.recipes.fragment.RecipeListFragment;
 
+// TODO: verificar el tema de que todos los fragments hagan sus llamadas al abrir la app.
+// TODO: si se agrega una nueva receta o se agrega/quita un favorito, habría que actualizar
+
 public class HomeActivity extends AppCompatActivity {
 
     private MaterialToolbar toolbar;

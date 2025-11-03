@@ -1,5 +1,6 @@
 package ar.edu.uade.recipes.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.google.android.material.button.MaterialButton;
 import java.util.List;
 
 import ar.edu.uade.recipes.R;
+import ar.edu.uade.recipes.RecipeDetailActivity;
 import ar.edu.uade.recipes.adapter.RecipesAdapter;
 import ar.edu.uade.recipes.model.Recipe;
 import ar.edu.uade.recipes.repository.RecipeRepository;
@@ -258,8 +260,15 @@ public abstract class BaseRecipeListFragment extends Fragment implements RecipeL
     @StringRes
     protected abstract int getEmptyStateMessage();
 
+    /**
+     * Método que se llama cuando se hace click en una receta.
+     * Abre el detalle de la receta.
+     */
     protected void onRecipeClick(Recipe recipe) {
-        Toast.makeText(getContext(), "Abrir: " + recipe.getTitle(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
+        intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE_ID, recipe.getId());
+        intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE_TITLE, recipe.getTitle());
+        startActivity(intent);
     }
 }
 
