@@ -8,6 +8,8 @@
     <string name="register_hint_email">Email</string>
     <string name="register_hint_password">Contraseña</string>
     <string name="register_hint_confirm_password">Confirmar contraseña</string>
+    <string name="register_profile_image_description">Imagen de perfil</string>
+    <string name="register_edit_profile_image">Editar imagen de perfil</string>
     <string name="register_btn_select_profile_image">Seleccionar foto de perfil (opcional)</string>
     <string name="register_profile_image_selected">Foto seleccionada ✓</string>
     <string name="register_checkbox_terms">Acepto los Términos y Condiciones</string>
@@ -49,4 +51,28 @@
 
     <!-- Recipe Item -->
     <string name="recipe_author_prefix">Por: %1$s</string>
+
+    <!-- Recipe Detail -->
+    <string name="recipe_detail_image_description">Imagen de la receta</string>
+    <string name="recipe_detail_favorite_description">Agregar a favoritos</string>
+    <string name="recipe_detail_avg_rating_label">Calificación:</string>
+    <string name="recipe_detail_user_rating_label">Tu calificación:</string>
+    <string name="recipe_detail_star_description">Estrella de calificación</string>
+    <string name="recipe_detail_rating_format">%.1f</string>
+    <string name="recipe_detail_description_label">Descripción</string>
+    <string name="recipe_detail_ingredients_label">Ingredientes</string>
+    <string name="recipe_detail_steps_label">Pasos a seguir</string>
+    <string name="recipe_detail_add_to_cart">Agregar ingredientes al carrito</string>
+    <string name="recipe_detail_step_prefix">Paso %1$d</string>
+    <string name="recipe_detail_ingredient_format">%1$.1f %2$s de %3$s</string>
+    <string name="recipe_detail_error_title">Error al cargar receta</string>
+    <string name="recipe_detail_error_message">No se pudo cargar la receta. ¿Deseas reintentar?</string>
+    <string name="recipe_detail_error_retry">Reintentar</string>
+    <string name="recipe_detail_error_back">Volver</string>
+    <string name="recipe_detail_cart_mock">Funcionalidad de carrito próximamente</string>
+    <string name="recipe_detail_favorite_added">Agregado a favoritos</string>
+    <string name="recipe_detail_favorite_removed">Eliminado de favoritos</string>
+    <string name="recipe_detail_rating_added">Calificación agregada</string>
+    <string name="recipe_detail_rating_updated">Calificación actualizada</string>
+    <string name="recipe_detail_rating_error">Error al guardar la calificación</string>
 </resources>

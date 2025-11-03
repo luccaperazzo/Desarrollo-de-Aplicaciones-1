@@ -2,6 +2,7 @@ package ar.edu.uade.recipes;
 
 import android.Manifest;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -9,6 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -48,7 +51,9 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout tilUsername, tilName, tilEmail, tilPass, tilConfirm;
     private TextInputEditText etUsername, etName, etEmail, etPass, etConfirm;
     private MaterialCheckBox cbTerms;
-    private MaterialButton btnRegister, btnProfileImage;
+    private MaterialButton btnRegister;
+    private FloatingActionButton fabEditProfileImage;
+    private ImageView ivProfileImage;
     private ProgressBar progressBar;
     private AuthService authService;
 
@@ -106,12 +111,14 @@ public class RegisterActivity extends AppCompatActivity {
 
         cbTerms = findViewById(R.id.cbTerms);
         btnRegister = findViewById(R.id.btnRegister);
-        btnProfileImage = findViewById(R.id.btnProfileImage);
+        fabEditProfileImage = findViewById(R.id.fabEditProfileImage);
+        ivProfileImage = findViewById(R.id.ivProfileImage);
         MaterialButton btnAlready = findViewById(R.id.btnAlready);
         progressBar = findViewById(R.id.progressBar);
 
         authService = RetrofitClient.getRetrofitInstance(this).create(AuthService.class);
 
+        // TextWatcher para habilitar/deshabilitar el botón
         TextWatcher watcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -123,18 +130,102 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                validate();
+                validateForButtonEnable();
             }
         };
 
         etUsername.addTextChangedListener(watcher);
         etName.addTextChangedListener(watcher);
-        etEmail.addTextChangedListener(watcher);
-        etPass.addTextChangedListener(watcher);
-        etConfirm.addTextChangedListener(watcher);
-        cbTerms.setOnCheckedChangeListener((buttonView, isChecked) -> validate());
+        cbTerms.setOnCheckedChangeListener((buttonView, isChecked) -> validateForButtonEnable());
 
-        btnProfileImage.setOnClickListener(v -> checkPermissionAndShowDialog());
+        // TextWatcher para email
+        etEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Limpiar error mientras escribe
+                if (tilEmail.getError() != null) {
+                    tilEmail.setErrorEnabled(false);
+                    tilEmail.setError(null);
+                }
+                validateForButtonEnable();
+            }
+        });
+
+        // TextWatcher para contraseña
+        etPass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Limpiar error mientras escribe
+                if (tilPass.getError() != null) {
+                    tilPass.setErrorEnabled(false);
+                    tilPass.setError(null);
+                }
+                validateForButtonEnable();
+            }
+        });
+
+        // TextWatcher para confirmar contraseña
+        etConfirm.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Limpiar error mientras escribe
+                if (tilConfirm.getError() != null) {
+                    tilConfirm.setErrorEnabled(false);
+                    tilConfirm.setError(null);
+                }
+                validateForButtonEnable();
+            }
+        });
+
+        // Validar campos cuando en blur
+        etEmail.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                validateEmail();
+            }
+        });
+
+        etPass.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                validatePassword();
+            }
+        });
+
+        etConfirm.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                validateConfirmPassword();
+            }
+        });
+
+        // mostrar/ocultar contraseña en campo de pass y en campo de confirmar
+        handlePasswordVisibility();
+
+        // Configurar imagen de perfil
+        fabEditProfileImage.setOnClickListener(v -> checkPermissionAndShowDialog());
+        ivProfileImage.setOnClickListener(v -> checkPermissionAndShowDialog());
 
         btnRegister.setOnClickListener(v -> {
             hideKeyboard(v);
@@ -147,7 +238,7 @@ public class RegisterActivity extends AppCompatActivity {
             finish();
         });
 
-        validate();
+        validateForButtonEnable();
     }
 
     private void checkPermissionAndShowDialog() {
@@ -185,7 +276,15 @@ public class RegisterActivity extends AppCompatActivity {
     private void processImage(Uri imageUri) {
         selectedImageBase64 = ImageHelper.convertImageToBase64(this, imageUri);
         if (selectedImageBase64 != null) {
-            btnProfileImage.setText(R.string.register_profile_image_selected);
+            // Mostrar preview de la imagen
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                ivProfileImage.setImageBitmap(bitmap);
+                ivProfileImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                ivProfileImage.setPadding(0, 0, 0, 0); // Quitar padding cuando hay imagen
+            } catch (Exception e) {
+                Toast.makeText(this, getString(R.string.register_error_processing_image), Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(this, getString(R.string.register_error_processing_image), Toast.LENGTH_SHORT).show();
         }
@@ -235,40 +334,17 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void validate() {
+    /**
+     * Valida solo para habilitar/deshabilitar el botón de registro sin mostrar errores visuales
+     */
+    private void validateForButtonEnable() {
         String username = getTextOf(etUsername);
         String name = getTextOf(etName);
         String email = getTextOf(etEmail);
         String pass = getTextOf(etPass);
         String confirm = getTextOf(etConfirm);
 
-        tilUsername.setError(null);
-        tilName.setError(null);
-        tilEmail.setError(null);
-        tilPass.setError(null);
-        tilConfirm.setError(null);
-
-        boolean hasErrors = false;
-
-        // Validar email
-        if (!email.isEmpty() && !isValidEmail(email)) {
-            tilEmail.setError(getString(R.string.register_error_invalid_email));
-            hasErrors = true;
-        }
-
-        // Validar contraseña
-        if (!pass.isEmpty() && !isValidPassword(pass)) {
-            tilPass.setError(getString(R.string.register_error_invalid_password));
-            hasErrors = true;
-        }
-
-        // Validar confirmación de contraseña
-        if (!pass.equals(confirm) && !confirm.isEmpty()) {
-            tilConfirm.setError(getString(R.string.register_error_passwords_dont_match));
-            hasErrors = true;
-        }
-
-        boolean fieldsfilled = !username.isEmpty()
+        boolean isValid = !username.isEmpty()
                 && !name.isEmpty()
                 && !email.isEmpty()
                 && !pass.isEmpty()
@@ -276,10 +352,93 @@ public class RegisterActivity extends AppCompatActivity {
                 && pass.equals(confirm)
                 && isValidEmail(email)
                 && isValidPassword(pass)
-                && cbTerms.isChecked()
-                && !hasErrors;
+                && cbTerms.isChecked();
 
-        btnRegister.setEnabled(fieldsfilled);
+        btnRegister.setEnabled(isValid);
+    }
+
+    /**
+     * Valida el email y muestra error
+     */
+    private void validateEmail() {
+        String email = getTextOf(etEmail);
+
+        if (!email.isEmpty() && !isValidEmail(email)) {
+            tilEmail.setErrorEnabled(true);
+            tilEmail.setError(getString(R.string.register_error_invalid_email));
+        } else {
+            tilEmail.setErrorEnabled(false);
+            tilEmail.setError(null);
+        }
+
+        validateForButtonEnable();
+    }
+
+    /**
+     * Valida la contraseña y muestra error
+     */
+    private void validatePassword() {
+        String pass = getTextOf(etPass);
+
+        if (!pass.isEmpty() && !isValidPassword(pass)) {
+            tilPass.setErrorEnabled(true);
+            tilPass.setError(getString(R.string.register_error_invalid_password));
+        } else {
+            tilPass.setErrorEnabled(false);
+            tilPass.setError(null);
+        }
+
+        validateForButtonEnable();
+    }
+
+    /**
+     * Valida la confirmación de contraseña y muestra error
+     */
+    private void validateConfirmPassword() {
+        String pass = getTextOf(etPass);
+        String confirm = getTextOf(etConfirm);
+
+        if (!confirm.isEmpty() && !pass.equals(confirm)) {
+            tilConfirm.setErrorEnabled(true);
+            tilConfirm.setError(getString(R.string.register_error_passwords_dont_match));
+        } else {
+            tilConfirm.setErrorEnabled(false);
+            tilConfirm.setError(null);
+        }
+
+        validateForButtonEnable();
+    }
+
+    /**
+     * MAneja la visibilidad de las contraseñas entre ambos campos
+     */
+    private void handlePasswordVisibility() {
+        // Listener unificado para ambos campos
+        View.OnClickListener togglePasswordVisibility = v -> {
+            // Obtener el estado actual (cualquiera de los dos campos sirve)
+            boolean isPasswordVisible = (etPass.getInputType() & android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) != 0;
+
+            // Determinar el nuevo tipo de input
+            int newInputType = isPasswordVisible
+                ? android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+                : android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
+
+            // Aplicar a ambos campos
+            etPass.setInputType(newInputType);
+            etConfirm.setInputType(newInputType);
+
+            // Mantener el cursor al final del texto en ambos campos
+            etPass.setSelection(etPass.getText() != null ? etPass.getText().length() : 0);
+            etConfirm.setSelection(etConfirm.getText() != null ? etConfirm.getText().length() : 0);
+
+            // Actualizar ambos íconos
+            tilPass.refreshEndIconDrawableState();
+            tilConfirm.refreshEndIconDrawableState();
+        };
+
+        // Asignar el mismo listener a ambos campos
+        tilPass.setEndIconOnClickListener(togglePasswordVisibility);
+        tilConfirm.setEndIconOnClickListener(togglePasswordVisibility);
     }
 
     private String getTextOf(TextInputEditText et) {
