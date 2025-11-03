@@ -29,6 +29,7 @@ import ar.edu.uade.recipes.model.LoginRequest;
 import ar.edu.uade.recipes.model.LoginResponse;
 import ar.edu.uade.recipes.service.AuthService;
 import ar.edu.uade.recipes.service.RetrofitClient;
+import ar.edu.uade.recipes.util.UserManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     private MaterialButton btnLogin;
     private ProgressBar progressBar;
     private AuthService authService;
+    private UserManager userManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         MaterialButton btnNoCuenta = findViewById(R.id.btnNoCuenta);
 
         authService = RetrofitClient.getRetrofitInstance(this).create(AuthService.class);
+        userManager = new UserManager(this);
 
         // TextWatcher para habilitar botón cuando se ingrese email y pass
         TextWatcher watcher = new TextWatcher() {
@@ -130,10 +133,12 @@ public class LoginActivity extends AppCompatActivity {
                     if (tilEmail != null) tilEmail.setError(null);
                     if (tilPassword != null) tilPassword.setError(null);
 
-                    getSharedPreferences("auth", MODE_PRIVATE).edit()
-                            .putString("token", response.body().getAccessToken())
-                            .putBoolean("logged_in", true)
-                            .apply();
+                    // Guardar token y usuario
+                    userManager.saveToken(response.body().getAccessToken());
+                    if (response.body().getUser() != null) {
+                        userManager.saveUser(response.body().getUser());
+                    }
+
                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     finish(); // evita volver al login con back
                 } else {
