@@ -2,6 +2,7 @@ package ar.edu.uade.recipes.service;
 
 import java.util.List;
 
+import ar.edu.uade.recipes.model.CreateRecipeRequest;
 import ar.edu.uade.recipes.model.RatingRequest;
 import ar.edu.uade.recipes.model.Recipe;
 import ar.edu.uade.recipes.model.RecipeDetail;
@@ -51,5 +52,14 @@ public interface RecipeService {
 
     @PUT("/api/ratings/{recipe_id}")
     Call<Void> updateRating(@Path("recipe_id") String recipeId, @Body RatingRequest ratingRequest);
+
+    @POST("/api/recipes/")
+    Call<RecipeDetail> createRecipe(@Body CreateRecipeRequest createRecipeRequest);
+
+    @PUT("/api/recipes/{recipe_id}")
+    Call<RecipeDetail> updateRecipe(@Path("recipe_id") String recipeId, @Body CreateRecipeRequest createRecipeRequest);
+
+    @DELETE("/api/recipes/{recipe_id}")
+    Call<Void> deleteRecipe(@Path("recipe_id") String recipeId);
 }
 

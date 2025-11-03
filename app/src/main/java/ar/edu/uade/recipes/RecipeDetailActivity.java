@@ -1,6 +1,9 @@
 package ar.edu.uade.recipes;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -167,6 +170,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
         tvRecipeTitle.setText(recipe.getTitle());
         toolbar.setTitle(recipe.getTitle());
 
+        // Invalidar menú para mostrar opciones si es owner
+        invalidateOptionsMenu();
+
         // Autor
         tvRecipeAuthor.setText(getString(R.string.recipe_author_prefix, recipe.getAuthorName()));
 
@@ -183,7 +189,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     .into(ivRecipeImage);
         }
 
-        // Si es receta propia, ocultar favorito y rating del usuario
+        // Si es receta propia, ocultar favorito y rating del usuario, mostrar botones de edición/borrado
         if (recipe.isOwner()) {
             btnFavorite.setVisibility(View.GONE);
             if (userRatingContainer != null) {
@@ -420,6 +426,81 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 .setNegativeButton(R.string.recipe_detail_error_back, (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
+    }
+
+    private void editRecipe() {
+        if (currentRecipe == null) return;
+
+        Intent intent = new Intent(this, CreateRecipeActivity.class);
+        intent.putExtra(CreateRecipeActivity.EXTRA_RECIPE_ID, recipeId);
+        intent.putExtra(CreateRecipeActivity.EXTRA_IS_EDIT_MODE, true);
+        startActivity(intent);
+        finish(); // Cerrar el detalle para que al volver se recargue
+    }
+
+    private void showDeleteConfirmation() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.delete_recipe_title)
+                .setMessage(R.string.delete_recipe_message)
+                .setPositiveButton(R.string.delete_recipe_confirm, (dialog, which) -> deleteRecipe())
+                .setNegativeButton(R.string.delete_recipe_cancel, null)
+                .show();
+    }
+
+    private void deleteRecipe() {
+        showLoading(true);
+
+        recipeService.deleteRecipe(recipeId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                showLoading(false);
+                if (response.isSuccessful()) {
+                    Toast.makeText(RecipeDetailActivity.this, R.string.delete_recipe_success, Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(RecipeDetailActivity.this, R.string.delete_recipe_error, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                showLoading(false);
+                Toast.makeText(RecipeDetailActivity.this, R.string.delete_recipe_error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (currentRecipe != null && currentRecipe.isOwner()) {
+            getMenuInflater().inflate(R.menu.menu_recipe_detail, menu);
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_edit) {
+            editRecipe();
+            return true;
+        } else if (id == R.id.action_delete) {
+            showDeleteConfirmation();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Recargar la receta cuando volvemos de editar
+        if (currentRecipe != null) {
+            loadRecipeDetail();
+        }
     }
 }
 

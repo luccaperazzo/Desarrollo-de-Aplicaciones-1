@@ -1,11 +1,11 @@
 package ar.edu.uade.recipes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -113,7 +113,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Configurar FAB
         fab.setOnClickListener(v ->
-                Toast.makeText(this, R.string.home_fab_add_recipe, Toast.LENGTH_SHORT).show()
+                startActivity(new Intent(this, CreateRecipeActivity.class))
         );
 
         // Configurar búsqueda con debounce

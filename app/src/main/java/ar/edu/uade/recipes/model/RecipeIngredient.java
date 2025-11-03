@@ -4,18 +4,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class RecipeIngredient {
     private String name;
-    private double quantity;
+    private String quantity;
 
     @SerializedName("unit")
-    private String unitOfMeasure;
+    private String unit;
 
     public RecipeIngredient() {
     }
 
-    public RecipeIngredient(String name, double quantity, String unitOfMeasure) {
+    public RecipeIngredient(String name, String quantity, String unit) {
         this.name = name;
         this.quantity = quantity;
-        this.unitOfMeasure = unitOfMeasure;
+        this.unit = unit;
     }
 
     public String getName() {
@@ -26,20 +26,28 @@ public class RecipeIngredient {
         this.name = name;
     }
 
-    public double getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(double quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
     public String getUnitOfMeasure() {
-        return unitOfMeasure;
+        return unit;
     }
 
     public void setUnitOfMeasure(String unitOfMeasure) {
-        this.unitOfMeasure = unitOfMeasure;
+        this.unit = unitOfMeasure;
     }
 }
 

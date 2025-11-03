@@ -64,7 +64,7 @@
     <string name="recipe_detail_steps_label">Pasos a seguir</string>
     <string name="recipe_detail_add_to_cart">Agregar ingredientes al carrito</string>
     <string name="recipe_detail_step_prefix">Paso %1$d</string>
-    <string name="recipe_detail_ingredient_format">%1$.1f %2$s de %3$s</string>
+    <string name="recipe_detail_ingredient_format">%1$s %2$s de %3$s</string>
     <string name="recipe_detail_error_title">Error al cargar receta</string>
     <string name="recipe_detail_error_message">No se pudo cargar la receta. ¿Deseas reintentar?</string>
     <string name="recipe_detail_error_retry">Reintentar</string>
@@ -75,4 +75,46 @@
     <string name="recipe_detail_rating_added">Calificación agregada</string>
     <string name="recipe_detail_rating_updated">Calificación actualizada</string>
     <string name="recipe_detail_rating_error">Error al guardar la calificación</string>
+
+    <!-- Create Recipe -->
+    <string name="create_recipe_title">Nueva Receta</string>
+    <string name="create_recipe_upload_image">Subir imagen de la receta</string>
+    <string name="create_recipe_image_preview">Vista previa de la imagen</string>
+    <string name="create_recipe_name_hint">Nombre de la receta</string>
+    <string name="create_recipe_description_hint">Descripción</string>
+    <string name="create_recipe_steps_label">Pasos</string>
+    <string name="create_recipe_step_hint">Paso</string>
+    <string name="create_recipe_add_step">Agregar paso</string>
+    <string name="create_recipe_remove_step">Eliminar paso</string>
+    <string name="create_recipe_ingredients_label">Ingredientes</string>
+    <string name="create_recipe_ingredient_name_hint">ingrediente</string>
+    <string name="create_recipe_quantity_hint">cantidad</string>
+    <string name="create_recipe_unit_hint">ml</string>
+    <string name="create_recipe_add_ingredient">Agregar ingrediente</string>
+    <string name="create_recipe_remove_ingredient">Eliminar ingrediente</string>
+    <string name="create_recipe_save">Guardar</string>
+    <string name="create_recipe_error_empty_fields">Por favor completa todos los campos</string>
+    <string name="create_recipe_error_empty_steps">Debes agregar al menos un paso</string>
+    <string name="create_recipe_error_empty_ingredients">Debes agregar al menos un ingrediente</string>
+    <string name="create_recipe_error_no_image">Debes seleccionar una imagen</string>
+    <string name="create_recipe_success">Receta creada exitosamente</string>
+    <string name="create_recipe_error">Error al crear la receta</string>
+    <string name="create_recipe_select_image_title">Seleccionar imagen</string>
+    <string name="create_recipe_option_camera">Cámara</string>
+    <string name="create_recipe_option_gallery">Galería</string>
+
+    <!-- Edit Recipe -->
+    <string name="edit_recipe_title">Editar Receta</string>
+    <string name="edit_recipe_success">Receta actualizada exitosamente</string>
+    <string name="edit_recipe_error">Error al actualizar la receta</string>
+
+    <!-- Delete Recipe -->
+    <string name="delete_recipe_title">Eliminar receta</string>
+    <string name="delete_recipe_message">¿Estás seguro de que deseas eliminar esta receta? Esta acción no se puede deshacer.</string>
+    <string name="delete_recipe_confirm">Eliminar</string>
+    <string name="delete_recipe_cancel">Cancelar</string>
+    <string name="delete_recipe_success">Receta eliminada exitosamente</string>
+    <string name="delete_recipe_error">Error al eliminar la receta</string>
+    <string name="recipe_detail_edit">Editar</string>
+    <string name="recipe_detail_delete">Eliminar</string>
 </resources>
