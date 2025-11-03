@@ -32,6 +32,43 @@
             android:layout_height="wrap_content"
             android:padding="20dp">
 
+
+            <!-- Imagen de perfil -->
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ivProfileImage"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:background="@drawable/bg_profile_placeholder"
+                    android:src="@drawable/ic_person_large"
+                    android:scaleType="centerInside"
+                    android:padding="20dp"
+                    app:shapeAppearanceOverlay="@style/ProfileImageCircle"
+                    android:contentDescription="@string/register_profile_image_description" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabEditProfileImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@id/ivProfileImage"
+                    android:layout_alignBottom="@id/ivProfileImage"
+                    android:layout_marginEnd="35dp"
+                    android:layout_marginBottom="35dp"
+                    android:contentDescription="@string/register_edit_profile_image"
+                    android:src="@drawable/ic_edit_circle_24"
+                    app:backgroundTint="#6D8777"
+                    app:fabCustomSize="48dp"
+                    app:fabSize="mini"
+                    app:tint="@android:color/white" />
+
+            </RelativeLayout>
+
             <!-- Username -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilUsername"
@@ -88,7 +125,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:hint="@string/register_hint_password"
-                app:endIconMode="password_toggle">
+                app:endIconMode="password_toggle"
+                app:errorIconDrawable="@null">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPass"
@@ -105,7 +143,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:hint="@string/register_hint_confirm_password"
-                app:endIconMode="password_toggle">
+                app:endIconMode="password_toggle"
+                app:errorIconDrawable="@null">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etConfirm"
@@ -113,17 +152,6 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Imagen de perfil -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnProfileImage"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/register_btn_select_profile_image"
-                android:drawableStart="@android:drawable/ic_menu_gallery"
-                android:drawablePadding="8dp" />
 
             <!-- Términos -->
             <com.google.android.material.checkbox.MaterialCheckBox
