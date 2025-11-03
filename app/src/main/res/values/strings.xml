@@ -8,6 +8,8 @@
     <string name="register_hint_email">Email</string>
     <string name="register_hint_password">Contraseña</string>
     <string name="register_hint_confirm_password">Confirmar contraseña</string>
+    <string name="register_profile_image_description">Imagen de perfil</string>
+    <string name="register_edit_profile_image">Editar imagen de perfil</string>
     <string name="register_btn_select_profile_image">Seleccionar foto de perfil (opcional)</string>
     <string name="register_profile_image_selected">Foto seleccionada ✓</string>
     <string name="register_checkbox_terms">Acepto los Términos y Condiciones</string>
