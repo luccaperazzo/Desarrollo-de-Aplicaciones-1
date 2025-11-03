@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -17,11 +18,30 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import ar.edu.uade.recipes.model.LoginRequest;
+import ar.edu.uade.recipes.model.LoginResponse;
+import ar.edu.uade.recipes.service.AuthService;
+import ar.edu.uade.recipes.service.RetrofitClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+// TODO: agregar logo en la vista
 
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText etEmail, etPassword;
+    private TextInputLayout tilEmail, tilPassword;
     private MaterialButton btnLogin;
+    private ProgressBar progressBar;
+    private AuthService authService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +56,13 @@ public class LoginActivity extends AppCompatActivity {
 
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
+        tilEmail = findViewById(R.id.tilEmail);
+        tilPassword = findViewById(R.id.tilPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        progressBar = findViewById(R.id.progressBar);
         MaterialButton btnNoCuenta = findViewById(R.id.btnNoCuenta);
+
+        authService = RetrofitClient.getRetrofitInstance(this).create(AuthService.class);
 
         // TextWatcher para habilitar botón cuando se ingrese email y pass
         TextWatcher watcher = new TextWatcher() {
@@ -53,33 +78,94 @@ public class LoginActivity extends AppCompatActivity {
         etEmail.addTextChangedListener(watcher);
         etPassword.addTextChangedListener(watcher);
 
-        // Click en Login
-        btnLogin.setOnClickListener(v -> {
-            String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
-            String pass = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
-
-            // TODO: chequeo con el back de mail y pass
-
-            if (email.equals("error")) {
-                Toast.makeText(this, "Credenciales inválidas!", Toast.LENGTH_SHORT).show();
-                return;
+        // Limpiar estado de error cuando el usuario edita
+        etEmail.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (tilEmail != null) tilEmail.setError(null);
             }
-
-            // Lógica de login exitoso mock
-            hideKeyboard(v);
-            Toast.makeText(this, "Logueado!", Toast.LENGTH_SHORT).show();
-
-            getSharedPreferences("auth", MODE_PRIVATE).edit()
-                    .putBoolean("logged_in", true)
-                    .apply();
-            startActivity(new Intent(this, HomeActivity.class));
-            finish(); // evita volver al login con back
+            @Override public void afterTextChanged(Editable s) {}
         });
+
+        etPassword.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (tilPassword != null) tilPassword.setError(null);
+            }
+            @Override public void afterTextChanged(Editable s) {}
+        });
+
+        // Click en Login
+        btnLogin.setOnClickListener(v -> this.handleLogin(v));
 
         // Click en Registro
         btnNoCuenta.setOnClickListener(v -> {
             hideKeyboard(v);
             startActivity(new Intent(this, RegisterActivity.class));
+        });
+    }
+
+    private void handleLogin(View view) {
+        String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
+        String pass = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
+
+        // Ocultar teclado y mostrar loader
+        hideKeyboard(view);
+        progressBar.setVisibility(View.VISIBLE);
+        btnLogin.setEnabled(false);
+        if (tilEmail != null) tilEmail.setError(null);
+        if (tilPassword != null) tilPassword.setError(null);
+
+        Call<LoginResponse> call = authService.login(new LoginRequest(email, pass));
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                progressBar.setVisibility(View.GONE);
+                btnLogin.setEnabled(true);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    // Lógica de login exitoso
+                    Toast.makeText(LoginActivity.this, "Logueado!", Toast.LENGTH_SHORT).show();
+
+                    if (tilEmail != null) tilEmail.setError(null);
+                    if (tilPassword != null) tilPassword.setError(null);
+
+                    getSharedPreferences("auth", MODE_PRIVATE).edit()
+                            .putString("token", response.body().getAccessToken())
+                            .putBoolean("logged_in", true)
+                            .apply();
+                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                    finish(); // evita volver al login con back
+                } else {
+                    // Lógica de error
+                    String errorMessage = "Credenciales inválidas!";
+                    try {
+                        if (response.errorBody() != null) {
+                            String errorBody = response.errorBody().string();
+                            JSONObject jsonObject = new JSONObject(errorBody);
+                            errorMessage = jsonObject.getString("detail");
+                        }
+                    } catch (IOException | JSONException ignored) { }
+
+                    Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+
+                    // Marcar inputs en rojo (estado de error)
+                    if (tilEmail != null) tilEmail.setError(" ");
+                    if (tilPassword != null) tilPassword.setError(" ");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                btnLogin.setEnabled(true);
+
+                Toast.makeText(LoginActivity.this, "Error de red. Verifique su conexión.", Toast.LENGTH_SHORT).show();
+
+                // Mostrar error visual también en caso de fallo de red
+                if (tilEmail != null) tilEmail.setError("");
+                if (tilPassword != null) tilPassword.setError("");
+            }
         });
     }
 
