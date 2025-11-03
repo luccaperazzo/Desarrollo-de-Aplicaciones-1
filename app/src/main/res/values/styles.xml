@@ -26,10 +26,4 @@
         <item name="labelVisibilityMode">labeled</item>
         <item name="elevation">8dp</item>
     </style>
-
-    <!-- Estilo para imagen de perfil circular -->
-    <style name="ProfileImageCircle">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
-    </style>
 </resources>

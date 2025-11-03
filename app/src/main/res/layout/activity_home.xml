@@ -11,13 +11,14 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:title="@string/home_title_explore"
+        app:title="Explorar"
         app:titleCentered="true"
         app:navigationIcon="@drawable/ic_menu_24"
         android:background="?attr/colorPrimary"
         app:titleTextColor="?attr/colorOnPrimary"
         app:navigationIconTint="?attr/colorOnPrimary"/>
 
+    <!--  Con FrameLayout nos quedó bien el FAB -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -25,6 +26,7 @@
 
         <LinearLayout
             android:orientation="vertical"
+            android:padding="16dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -34,8 +36,7 @@
                 style="@style/Widget.Material3.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:hint="@string/home_search_hint"
+                android:hint="Buscar recetas..."
                 app:shapeAppearanceOverlay="@style/Shape.TextField.Rounded"
                 app:startIconDrawable="@drawable/ic_search_24"
                 app:startIconTint="?attr/colorOnSurfaceVariant"
@@ -49,12 +50,16 @@
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Container para fragments -->
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragmentContainer"
+            <!-- Lista de recetas -->
+            <!-- RecyclerView es un widget para para listar elementos -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRecipes"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingBottom="80dp"/>
         </LinearLayout>
 
         <!-- FAB -->
