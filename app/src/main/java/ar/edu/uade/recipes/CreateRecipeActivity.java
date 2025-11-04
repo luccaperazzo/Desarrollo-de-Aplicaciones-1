@@ -292,6 +292,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     int messageRes = isEditMode ? R.string.edit_recipe_success : R.string.create_recipe_success;
                     Toast.makeText(CreateRecipeActivity.this, messageRes, Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK); // Notificar que hubo cambios
                     finish();
                 } else {
                     int errorRes = isEditMode ? R.string.edit_recipe_error : R.string.create_recipe_error;

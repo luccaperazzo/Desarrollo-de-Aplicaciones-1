@@ -175,9 +175,10 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         // Configurar FAB
-        fab.setOnClickListener(v ->
-                startActivity(new Intent(this, CreateRecipeActivity.class))
-        );
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CreateRecipeActivity.class);
+            startActivityForResult(intent, 200); // code receta creada
+        });
 
         // Configurar búsqueda con debounce
         etSearch.addTextChangedListener(new TextWatcher() {
@@ -335,6 +336,11 @@ public class HomeActivity extends AppCompatActivity {
         if (requestCode == 100 && resultCode == RESULT_OK) {
             // Recargar datos del usuario después de actualizar el perfil
             loadUserData();
+        } else if ((requestCode == 200 || requestCode == 201) && resultCode == RESULT_OK) {
+            // Recargar "Mis Recetas" después de crear, editar o borrar una receta
+            if (myRecipesFragment != null) {
+                myRecipesFragment.scrollToTopAndRefresh();
+            }
         }
     }
 
