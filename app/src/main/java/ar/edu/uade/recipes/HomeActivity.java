@@ -131,13 +131,34 @@ public class HomeActivity extends AppCompatActivity {
             myRecipesFragment = (MyRecipesFragment) getSupportFragmentManager().findFragmentByTag("my_recipes");
             favoritesFragment = (FavoritesFragment) getSupportFragmentManager().findFragmentByTag("favorites");
 
-            // Determinar cual está visible
-            if (exploreFragment != null && exploreFragment.isVisible()) {
+            // Si algún fragment es null, recrearlos todos
+            if (exploreFragment == null || myRecipesFragment == null || favoritesFragment == null) {
+                exploreFragment = new ExploreFragment();
+                myRecipesFragment = new MyRecipesFragment();
+                favoritesFragment = new FavoritesFragment();
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.fragmentContainer, exploreFragment, "explore")
+                        .add(R.id.fragmentContainer, myRecipesFragment, "my_recipes")
+                        .add(R.id.fragmentContainer, favoritesFragment, "favorites")
+                        .hide(myRecipesFragment)
+                        .hide(favoritesFragment)
+                        .commit();
+
                 currentFragment = exploreFragment;
-            } else if (myRecipesFragment != null && myRecipesFragment.isVisible()) {
-                currentFragment = myRecipesFragment;
-            } else if (favoritesFragment != null && favoritesFragment.isVisible()) {
-                currentFragment = favoritesFragment;
+            } else {
+                // Determinar cual está visible
+                if (exploreFragment.isVisible()) {
+                    currentFragment = exploreFragment;
+                } else if (myRecipesFragment.isVisible()) {
+                    currentFragment = myRecipesFragment;
+                } else if (favoritesFragment.isVisible()) {
+                    currentFragment = favoritesFragment;
+                } else {
+                    // Si ninguno está visible, mostrar explore por defecto
+                    currentFragment = exploreFragment;
+                }
             }
         }
 
@@ -218,6 +239,10 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadFragment(Fragment fragment, String title) {
+        if (fragment == null || currentFragment == null) {
+            return; // Evitar crash si los fragments son null
+        }
+
         if (currentFragment == fragment) {
             return; // Ya está visible
         }
