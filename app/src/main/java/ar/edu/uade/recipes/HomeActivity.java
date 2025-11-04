@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
@@ -69,6 +70,10 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Aplicar tema guardado antes de setContentView
+        applyTheme();
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -101,23 +106,41 @@ public class HomeActivity extends AppCompatActivity {
         setupDrawer();
         loadUserData();
 
-        // Inicializar fragments
-        exploreFragment = new ExploreFragment();
-        myRecipesFragment = new MyRecipesFragment();
-        favoritesFragment = new FavoritesFragment();
+        // Inicializar fragments si no fueron creados previamente
+        // (al cambiar el modo oscuro se reinicia la activity)
+        if (savedInstanceState == null) {
+            exploreFragment = new ExploreFragment();
+            myRecipesFragment = new MyRecipesFragment();
+            favoritesFragment = new FavoritesFragment();
 
-        // Agregar todos los fragments al inicio
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragmentContainer, exploreFragment, "explore")
-                .add(R.id.fragmentContainer, myRecipesFragment, "my_recipes")
-                .add(R.id.fragmentContainer, favoritesFragment, "favorites")
-                .hide(myRecipesFragment)
-                .hide(favoritesFragment)
-                .commit();
+            // Agregar todos los fragments al inicio
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragmentContainer, exploreFragment, "explore")
+                    .add(R.id.fragmentContainer, myRecipesFragment, "my_recipes")
+                    .add(R.id.fragmentContainer, favoritesFragment, "favorites")
+                    .hide(myRecipesFragment)
+                    .hide(favoritesFragment)
+                    .commit();
 
-        // Establecer fragment inicial
-        currentFragment = exploreFragment;
+            // Establecer fragment inicial
+            currentFragment = exploreFragment;
+        } else {
+            // obtenemos los fragments existentes después del reinicio
+            exploreFragment = (ExploreFragment) getSupportFragmentManager().findFragmentByTag("explore");
+            myRecipesFragment = (MyRecipesFragment) getSupportFragmentManager().findFragmentByTag("my_recipes");
+            favoritesFragment = (FavoritesFragment) getSupportFragmentManager().findFragmentByTag("favorites");
+
+            // Determinar cual está visible
+            if (exploreFragment != null && exploreFragment.isVisible()) {
+                currentFragment = exploreFragment;
+            } else if (myRecipesFragment != null && myRecipesFragment.isVisible()) {
+                currentFragment = myRecipesFragment;
+            } else if (favoritesFragment != null && favoritesFragment.isVisible()) {
+                currentFragment = favoritesFragment;
+            }
+        }
+
         toolbar.setTitle(R.string.home_title_explore);
 
         // Configurar BottomNavigationView
@@ -252,15 +275,12 @@ public class HomeActivity extends AppCompatActivity {
             // Guardar preferencia
             getSharedPreferences("settings", MODE_PRIVATE).edit().putBoolean("dark_mode", isChecked).apply();
 
-            // Actualizar icono
+            // Aplicar tema inmediatamente
             if (isChecked) {
-                ivThemeIcon.setImageResource(R.drawable.ic_dark_mode_24);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             } else {
-                ivThemeIcon.setImageResource(R.drawable.ic_light_mode_24);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
-
-            // TODO: Implementar aplicación del tema
-            // AppCompatDelegate.setDefaultNightMode(isChecked ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
         });
     }
 
@@ -271,11 +291,14 @@ public class HomeActivity extends AppCompatActivity {
 
             // Cargar imagen de perfil si existe
             if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
+                ivUserProfile.setImageTintList(null);
                 Glide.with(this)
                     .load(user.getProfileImageUrl())
                     .circleCrop()
                     .placeholder(R.drawable.ic_person_24)
                     .into(ivUserProfile);
+            } else {
+                ivUserProfile.setImageResource(R.drawable.ic_person_24);
             }
         }
     }
@@ -312,6 +335,15 @@ public class HomeActivity extends AppCompatActivity {
         if (requestCode == 100 && resultCode == RESULT_OK) {
             // Recargar datos del usuario después de actualizar el perfil
             loadUserData();
+        }
+    }
+
+    private void applyTheme() {
+        boolean isDarkMode = getSharedPreferences("settings", MODE_PRIVATE).getBoolean("dark_mode", false);
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
     }
 }

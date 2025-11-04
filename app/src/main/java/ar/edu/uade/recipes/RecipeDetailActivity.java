@@ -327,7 +327,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
             );
             tvIngredient.setText("• " + ingredientText);
             tvIngredient.setTextSize(14);
-            tvIngredient.setTextColor(getColor(android.R.color.black));
+            tvIngredient.setTextColor(com.google.android.material.color.MaterialColors.getColor(
+                    this,
+                    com.google.android.material.R.attr.colorOnSurface,
+                    android.graphics.Color.BLACK
+            ));
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -352,7 +356,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
             TextView tvStepTitle = new TextView(this);
             tvStepTitle.setText(getString(R.string.recipe_detail_step_prefix, step.getOrder()));
             tvStepTitle.setTextSize(16);
-            tvStepTitle.setTextColor(getColor(android.R.color.black));
+            tvStepTitle.setTextColor(com.google.android.material.color.MaterialColors.getColor(
+                    this,
+                    com.google.android.material.R.attr.colorOnSurface,
+                    android.graphics.Color.BLACK
+            ));
             tvStepTitle.setTypeface(null, android.graphics.Typeface.BOLD);
 
             LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
@@ -366,7 +374,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
             TextView tvStepDescription = new TextView(this);
             tvStepDescription.setText(step.getDescription());
             tvStepDescription.setTextSize(14);
-            tvStepDescription.setTextColor(getColor(android.R.color.black));
+            tvStepDescription.setTextColor(com.google.android.material.color.MaterialColors.getColor(
+                    this,
+                    com.google.android.material.R.attr.colorOnSurface,
+                    android.graphics.Color.BLACK
+            ));
 
             LinearLayout.LayoutParams descParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,

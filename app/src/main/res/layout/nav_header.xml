@@ -16,6 +16,7 @@
         android:src="@drawable/ic_person_24"
         android:background="?attr/colorSurface"
         android:padding="16dp"
+        app:tint="?attr/colorOnSurface"
         app:shapeAppearanceOverlay="@style/ProfileImageCircle"
         android:contentDescription="@string/register_profile_image_description" />
 
