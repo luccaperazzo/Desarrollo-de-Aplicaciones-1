@@ -131,7 +131,9 @@ public class ProfileActivity extends AppCompatActivity {
                         Uri selectedImageUri = result.getData().getData();
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
-                            processImage(bitmap);
+                            // Corregir orientación EXIF
+                            Bitmap correctedBitmap = ImageHelper.fixImageOrientation(this, selectedImageUri, bitmap);
+                            processImage(correctedBitmap);
                         } catch (IOException e) {
                             Log.e("ProfileActivity", "Error loading image from gallery", e);
                             Toast.makeText(this, getString(R.string.register_error_processing_image), Toast.LENGTH_SHORT).show();

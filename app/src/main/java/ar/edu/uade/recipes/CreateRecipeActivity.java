@@ -137,7 +137,9 @@ public class CreateRecipeActivity extends AppCompatActivity {
                     Uri imageUri = result.getData().getData();
                     try {
                         Bitmap bitmap = android.provider.MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                        processImage(bitmap);
+                        // Corregir orientación EXIF
+                        Bitmap correctedBitmap = ImageHelper.fixImageOrientation(this, imageUri, bitmap);
+                        processImage(correctedBitmap);
                     } catch (Exception e) {
                         Toast.makeText(this, R.string.register_error_processing_image, Toast.LENGTH_SHORT).show();
                     }
