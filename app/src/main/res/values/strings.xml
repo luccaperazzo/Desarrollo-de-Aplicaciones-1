@@ -16,7 +16,15 @@
     <string name="register_btn_register">Registrarme</string>
     <string name="register_btn_already_have_account">Ya tengo cuenta</string>
     <string name="register_error_passwords_dont_match">Las contraseñas no coinciden</string>
+    <string name="register_error_passwords_not_match">Las contraseñas no coinciden</string>
     <string name="register_error_invalid_email">Email inválido</string>
+    <string name="register_error_empty_email">El email es requerido</string>
+    <string name="register_error_empty_username">El nombre de usuario es requerido</string>
+    <string name="register_error_empty_full_name">El nombre completo es requerido</string>
+    <string name="register_error_short_password">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="register_error_password_lowercase">La contraseña debe contener al menos una minúscula</string>
+    <string name="register_error_password_uppercase">La contraseña debe contener al menos una mayúscula</string>
+    <string name="register_error_password_number">La contraseña debe contener al menos un número</string>
     <string name="register_error_invalid_password">La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número</string>
     <string name="register_success">Registro exitoso! Puedes iniciar sesión.</string>
     <string name="register_error_title">Error al registrar</string>
@@ -117,4 +125,22 @@
     <string name="delete_recipe_error">Error al eliminar la receta</string>
     <string name="recipe_detail_edit">Editar</string>
     <string name="recipe_detail_delete">Eliminar</string>
+
+    <!-- Drawer Menu -->
+    <string name="drawer_hello">Hola, %1$s</string>
+    <string name="drawer_my_profile">Mi perfil</string>
+    <string name="drawer_my_cart">Mi carrito</string>
+    <string name="drawer_logout">Cerrar sesión</string>
+    <string name="drawer_logout_confirm_title">Cerrar sesión</string>
+    <string name="drawer_logout_confirm_message">¿Estás seguro de que deseas cerrar sesión?</string>
+    <string name="drawer_logout_confirm_yes">Cerrar sesión</string>
+    <string name="drawer_logout_confirm_no">Cancelar</string>
+
+    <!-- Profile Activity -->
+    <string name="profile_title">Mi Perfil</string>
+    <string name="profile_save">Guardar cambios</string>
+    <string name="profile_success">Perfil actualizado exitosamente</string>
+    <string name="profile_error">Error al actualizar el perfil</string>
+    <string name="profile_password_hint">Nueva contraseña (opcional)</string>
+    <string name="profile_confirm_password_hint">Confirmar nueva contraseña</string>
 </resources>

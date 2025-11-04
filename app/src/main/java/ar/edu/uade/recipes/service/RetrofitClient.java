@@ -1,9 +1,9 @@
 package ar.edu.uade.recipes.service;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
+import ar.edu.uade.recipes.util.UserManager;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -28,8 +28,8 @@ public class RetrofitClient {
                     .addInterceptor(chain -> {
                         Request original = chain.request();
 
-                        SharedPreferences prefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE);
-                        String token = prefs.getString("token", null);
+                        UserManager userManager = new UserManager(context);
+                        String token = userManager.getToken();
 
                         Request.Builder builder = original.newBuilder();
                         if (token != null && !token.isEmpty()) {

@@ -1,10 +1,11 @@
 package ar.edu.uade.recipes;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import ar.edu.uade.recipes.util.UserManager;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -12,10 +13,9 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
-        boolean loggedIn = prefs.getBoolean("logged_in", false);
+        UserManager userManager = new UserManager(this);
 
-        if (loggedIn) {
+        if (userManager.isLoggedIn()) {
             // Usuario logueado -> ir a la home
             startActivity(new Intent(this, HomeActivity.class));
         } else {
