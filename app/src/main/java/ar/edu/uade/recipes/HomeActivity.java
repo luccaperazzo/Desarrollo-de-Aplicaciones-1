@@ -232,10 +232,11 @@ public class HomeActivity extends AppCompatActivity {
             startActivityForResult(intent, 100); // Request code 100 para ProfileActivity
         });
 
-        // Botón de carrito (mock)
+        // Botón de carrito
         btnCart.setOnClickListener(v -> {
             drawerLayout.closeDrawer(GravityCompat.START);
-            // TODO: implementar carrito
+            Intent intent = new Intent(this, CartActivity.class);
+            startActivity(intent);
         });
 
         // Botón de logout

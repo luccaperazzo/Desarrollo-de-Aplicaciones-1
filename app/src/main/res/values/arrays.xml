@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="units_array">
+        <item>ml</item>
+        <item>litros</item>
+        <item>gramos</item>
+        <item>kg</item>
+        <item>cdas</item>
+        <item>cditas</item>
+        <item>tazas</item>
+        <item>unidades</item>
+    </string-array>
+</resources>
+

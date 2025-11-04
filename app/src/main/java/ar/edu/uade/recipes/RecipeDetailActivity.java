@@ -22,6 +22,12 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import ar.edu.uade.recipes.database.AppDatabase;
+import ar.edu.uade.recipes.database.CartDao;
+import ar.edu.uade.recipes.model.CartItem;
 import ar.edu.uade.recipes.model.RatingRequest;
 import ar.edu.uade.recipes.model.RecipeDetail;
 import ar.edu.uade.recipes.model.RecipeIngredient;
@@ -63,6 +69,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private RecipeService recipeService;
     private String recipeId;
     private RecipeDetail currentRecipe;
+    private CartDao cartDao;
+    private Executor executor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,12 +135,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         // Inicializar servicio
         recipeService = RetrofitClient.getRetrofitInstance(this).create(RecipeService.class);
+        cartDao = AppDatabase.getInstance(this).cartDao();
+        executor = Executors.newSingleThreadExecutor();
 
-        // Configurar botón de carrito (mock)
-        btnAddToCart.setOnClickListener(v -> {
-            // TODO: implementar agregar al carrito
-            Toast.makeText(this, R.string.recipe_detail_cart_mock, Toast.LENGTH_SHORT).show();
-        });
+        // Configurar botón de carrito
+        btnAddToCart.setOnClickListener(v -> addIngredientsToCart());
 
         // Configurar botón de favoritos
         btnFavorite.setOnClickListener(v -> toggleFavorite());
@@ -501,6 +508,32 @@ public class RecipeDetailActivity extends AppCompatActivity {
         if (currentRecipe != null) {
             loadRecipeDetail();
         }
+    }
+
+    private void addIngredientsToCart() {
+        if (currentRecipe == null || currentRecipe.getIngredients() == null || currentRecipe.getIngredients().isEmpty()) {
+            Toast.makeText(this, "No hay ingredientes para agregar", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        executor.execute(() -> {
+            int count = 0;
+            for (RecipeIngredient ingredient : currentRecipe.getIngredients()) {
+                CartItem cartItem = new CartItem(
+                        ingredient.getName(),
+                        ingredient.getQuantity(),
+                        ingredient.getUnit()
+                );
+                cartDao.insert(cartItem);
+                count++;
+            }
+
+            final int finalCount = count;
+            runOnUiThread(() -> {
+                String message = getString(R.string.cart_ingredients_added) + " (" + finalCount + ")";
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            });
+        });
     }
 }
 

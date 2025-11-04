@@ -6,14 +6,16 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import ar.edu.uade.recipes.model.CartItem;
 import ar.edu.uade.recipes.model.Recipe;
 
-@Database(entities = {Recipe.class}, version = 1, exportSchema = false)
+@Database(entities = {Recipe.class, CartItem.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance;
 
     public abstract RecipeDao recipeDao();
+    public abstract CartDao cartDao();
 
     public static synchronized AppDatabase getInstance(Context context) {
         if (instance == null) {

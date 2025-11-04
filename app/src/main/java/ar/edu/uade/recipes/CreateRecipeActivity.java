@@ -65,10 +65,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> cameraLauncher;
     private ActivityResultLauncher<Intent> galleryLauncher;
-
-    private static final String[] UNITS = {
-        "ml", "litros", "gramos", "kg", "cdas", "cditas", "tazas", "unidades"
-    };
+    private String[] units;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +79,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
         });
 
         recipeService = RetrofitClient.getRetrofitInstance(this).create(RecipeService.class);
+        units = getResources().getStringArray(R.array.units_array);
 
         // Obtener datos del intent
         recipeId = getIntent().getStringExtra(EXTRA_RECIPE_ID);
@@ -208,9 +206,9 @@ public class CreateRecipeActivity extends AppCompatActivity {
         AutoCompleteTextView spinnerUnit = ingredientView.findViewById(R.id.spinnerUnit);
 
         // Configurar spinner de unidades
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, UNITS);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, units);
         spinnerUnit.setAdapter(adapter);
-        spinnerUnit.setText(UNITS[0], false); // Valor por defecto
+        spinnerUnit.setText(units[0], false); // Valor por defecto
 
         // Solo permitir eliminar si hay más de un ingrediente
         btnRemove.setOnClickListener(v -> {
@@ -387,7 +385,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
                 etQuantity.setText(ingredient.getQuantity());
 
                 // Configurar spinner
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, UNITS);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, units);
                 spinnerUnit.setAdapter(adapter);
                 spinnerUnit.setText(ingredient.getUnit(), false);
 

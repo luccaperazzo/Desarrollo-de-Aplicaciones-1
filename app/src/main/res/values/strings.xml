@@ -143,4 +143,24 @@
     <string name="profile_error">Error al actualizar el perfil</string>
     <string name="profile_password_hint">Nueva contraseña (opcional)</string>
     <string name="profile_confirm_password_hint">Confirmar nueva contraseña</string>
+
+    <!-- Cart Activity -->
+    <string name="cart_title">Carrito de Compras</string>
+    <string name="cart_empty_state_title">Carrito vacío</string>
+    <string name="cart_empty_state_message">Agrega ingredientes desde las recetas o manualmente</string>
+    <string name="cart_add_item">Agregar ingrediente</string>
+    <string name="cart_delete_item">Eliminar ingrediente</string>
+    <string name="cart_add_item_dialog_title">Agregar ingrediente</string>
+    <string name="cart_add_item_dialog_add">Agregar</string>
+    <string name="cart_add_item_dialog_cancel">Cancelar</string>
+    <string name="cart_item_name_hint">Nombre del ingrediente</string>
+    <string name="cart_item_quantity_hint">Cantidad</string>
+    <string name="cart_error_empty_fields">Por favor completa todos los campos</string>
+    <string name="cart_item_added">Ingrediente agregado</string>
+    <string name="cart_item_deleted">Ingrediente eliminado</string>
+    <string name="cart_delete_confirmation_title">Eliminar ingrediente</string>
+    <string name="cart_delete_confirmation_message">¿Estás seguro de que deseas eliminar este ingrediente?</string>
+    <string name="cart_delete_confirmation_yes">Eliminar</string>
+    <string name="cart_delete_confirmation_no">Cancelar</string>
+    <string name="cart_ingredients_added">Ingredientes agregados al carrito</string>
 </resources>
