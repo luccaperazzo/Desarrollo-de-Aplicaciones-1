@@ -54,6 +54,11 @@ dependencies {
     // ExifInterface para corregir orientación de imágenes
     implementation(libs.exifinterface)
 
+    // Lifecycle (ViewModel y LiveData)
+    implementation(libs.lifecycle.viewmodel)
+    implementation(libs.lifecycle.livedata)
+    implementation(libs.lifecycle.runtime)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

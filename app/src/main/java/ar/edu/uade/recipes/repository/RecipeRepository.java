@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import ar.edu.uade.recipes.R;
 import ar.edu.uade.recipes.database.AppDatabase;
 import ar.edu.uade.recipes.database.RecipeDao;
 import ar.edu.uade.recipes.model.Recipe;
@@ -57,19 +58,19 @@ public class RecipeRepository {
                                 callback.onSuccess(recipes, false);
                             } else {
                                 // Error del servidor
-                                callback.onError("Error del servidor", false);
+                                callback.onError(context.getString(R.string.error_server), false);
                             }
                         }
 
                         @Override
                         public void onFailure(Call<List<Recipe>> call, Throwable t) {
                             // Error de red
-                            callback.onError("Error de conexión", false);
+                            callback.onError(context.getString(R.string.error_connection), false);
                         }
                     });
         } else {
             // Sin conexión, no hay cache para públicas
-            callback.onError("Sin conexión", false);
+            callback.onError(context.getString(R.string.error_no_connection), false);
         }
     }
 
@@ -96,17 +97,17 @@ public class RecipeRepository {
 
                                 callback.onSuccess(recipes, false);
                             } else {
-                                loadFromDatabase("my_recipe", search, callback, "Error del servidor");
+                                loadFromDatabase("my_recipe", search, callback, context.getString(R.string.error_server));
                             }
                         }
 
                         @Override
                         public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                            loadFromDatabase("my_recipe", search, callback, "Error de conexión");
+                            loadFromDatabase("my_recipe", search, callback, context.getString(R.string.error_connection));
                         }
                     });
         } else {
-            loadFromDatabase("my_recipe", search, callback, "Sin conexión");
+            loadFromDatabase("my_recipe", search, callback, context.getString(R.string.error_no_connection));
         }
     }
 
@@ -133,17 +134,17 @@ public class RecipeRepository {
 
                                 callback.onSuccess(recipes, false);
                             } else {
-                                loadFromDatabase("favorite", search, callback, "Error del servidor");
+                                loadFromDatabase("favorite", search, callback, context.getString(R.string.error_server));
                             }
                         }
 
                         @Override
                         public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                            loadFromDatabase("favorite", search, callback, "Error de conexión");
+                            loadFromDatabase("favorite", search, callback, context.getString(R.string.error_connection));
                         }
                     });
         } else {
-            loadFromDatabase("favorite", search, callback, "Sin conexión");
+            loadFromDatabase("favorite", search, callback, context.getString(R.string.error_no_connection));
         }
     }
 

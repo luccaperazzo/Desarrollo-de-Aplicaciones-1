@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,10 +26,10 @@ import ar.edu.uade.recipes.R;
 import ar.edu.uade.recipes.RecipeDetailActivity;
 import ar.edu.uade.recipes.adapter.RecipesAdapter;
 import ar.edu.uade.recipes.model.Recipe;
-import ar.edu.uade.recipes.repository.RecipeRepository;
+import ar.edu.uade.recipes.viewmodel.HomeViewModel;
 
 /**
- * Clase base abstracta para los fragments que muestran listas de recetas.
+ * Clase abstracta para los fragments que muestran listas de recetas.
  * Contiene toda la lógica común de paginación, búsqueda, estados, etc.
  */
 public abstract class BaseRecipeListFragment extends Fragment implements RecipeListFragment {
@@ -43,13 +45,11 @@ public abstract class BaseRecipeListFragment extends Fragment implements RecipeL
     protected TextView tvErrorMessage;
     protected MaterialButton btnRetry;
 
-    // Data
-    protected RecipeRepository repository;
+    // Data - ViewModel
+    protected HomeViewModel viewModel;
     protected static final int PAGE_SIZE = 20;
-    protected int currentSkip = 0;
     protected String currentSearch = "";
     protected boolean isLoading = false;
-    protected boolean hasMoreData = true;
 
     @Nullable
     @Override
@@ -60,15 +60,17 @@ public abstract class BaseRecipeListFragment extends Fragment implements RecipeL
         setupRecyclerView();
         setupInfiniteScroll();
 
-        repository = new RecipeRepository(requireContext());
+        // Inicializar ViewModel
+        viewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+
+        // Observar LiveData
+        setupObservers();
 
         btnRetry.setOnClickListener(v -> {
-            currentSkip = 0;
-            hasMoreData = true;
-            loadRecipes();
+            loadRecipes(true);
         });
 
-        loadRecipes();
+        loadRecipes(true);
 
         return view;
     }
@@ -112,12 +114,55 @@ public abstract class BaseRecipeListFragment extends Fragment implements RecipeL
                     int totalItemCount = layoutManager.getItemCount();
                     int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
-                    if (!isLoading && hasMoreData) {
+                    Boolean hasMoreData = viewModel.getHasMoreData().getValue();
+                    if (!isLoading && hasMoreData != null && hasMoreData) {
                         if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 5) {
                             loadMoreRecipes();
                         }
                     }
                 }
+            }
+        });
+    }
+
+    private void setupObservers() {
+        // Observar recetas según el tipo de fragment
+        getRecipesLiveData().observe(getViewLifecycleOwner(), recipes -> {
+            if (recipes != null) {
+                updateRecipesList(recipes);
+            }
+        });
+
+        // Observar estado de carga
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
+            isLoading = loading != null && loading;
+            if (loading != null) {
+                if (loading) {
+                    // Mostrar skeleton solo en la primera carga
+                    if (adapter.getItemCount() == 0) {
+                        adapter.showSkeleton(5);
+                        showState(State.CONTENT);
+                    } else {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    adapter.hideSkeleton();
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        // Observar errores
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
+            if (errorMessage != null) {
+                handleError(errorMessage);
+            }
+        });
+
+        // Observar si viene de cache
+        viewModel.getIsFromCache().observe(getViewLifecycleOwner(), fromCache -> {
+            if (fromCache != null && fromCache && adapter.getItemCount() == 0) {
+                Toast.makeText(getContext(), R.string.error_state_offline_with_cache, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -139,120 +184,76 @@ public abstract class BaseRecipeListFragment extends Fragment implements RecipeL
     }
 
     /**
-     * Carga las recetas desde el repositorio
+     * Carga las recetas usando el ViewModel
      */
-    protected void loadRecipes() {
-        isLoading = true;
-
-        // Mostrar skeleton solo en la primera carga
-        if (currentSkip == 0) {
-            adapter.showSkeleton(5);
-            showState(State.CONTENT);
-        } else {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        fetchRecipes(currentSearch, currentSkip, PAGE_SIZE, new RecipeRepository.RecipeCallback() {
-            @Override
-            public void onSuccess(List<Recipe> recipes, boolean fromCache) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        isLoading = false;
-                        adapter.hideSkeleton();
-                        progressBar.setVisibility(View.GONE);
-
-                        if (fromCache) {
-                            // Datos desde cache, detener paginación
-                            hasMoreData = false;
-                            if (currentSkip == 0) {
-                                Toast.makeText(getContext(), R.string.error_state_offline_with_cache, Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            // Datos desde backend, verificar si hay más
-                            if (recipes.size() < PAGE_SIZE) {
-                                hasMoreData = false;
-                            }
-                        }
-
-                        if (currentSkip == 0) {
-                            adapter.setRecipes(recipes);
-
-                            if (recipes.isEmpty()) {
-                                // Mostrar empty state
-                                if (currentSearch != null && !currentSearch.isEmpty()) {
-                                    tvEmptyMessage.setText(R.string.empty_state_no_results);
-                                } else {
-                                    tvEmptyMessage.setText(getEmptyStateMessage());
-                                }
-                                showState(State.EMPTY);
-                            } else {
-                                showState(State.CONTENT);
-                            }
-                        } else {
-                            adapter.addRecipes(recipes);
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onError(String message, boolean hasCache) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        isLoading = false;
-                        adapter.hideSkeleton();
-                        progressBar.setVisibility(View.GONE);
-                        hasMoreData = false; // Detener infinite scroll en error
-
-                        if (currentSkip == 0) {
-                            if (hasCache) {
-                                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                            } else {
-                                tvErrorMessage.setText(message.equals("Sin conexión")
-                                    ? getString(R.string.error_state_offline_no_cache)
-                                    : getString(R.string.error_state_message));
-                                showState(State.ERROR);
-                            }
-                        } else {
-                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-        });
+    protected void loadRecipes(boolean reset) {
+        loadRecipesFromViewModel(currentSearch, reset);
     }
 
     /**
      * Carga más recetas (paginación)
      */
     protected void loadMoreRecipes() {
-        currentSkip += PAGE_SIZE;
-        loadRecipes();
+        loadRecipes(false);
+    }
+
+    /**
+     * Actualiza la lista de recetas cuando cambian los datos
+     */
+    private void updateRecipesList(List<Recipe> recipes) {
+        if (recipes.isEmpty()) {
+            // Mostrar empty state
+            if (currentSearch != null && !currentSearch.isEmpty()) {
+                tvEmptyMessage.setText(R.string.empty_state_no_results);
+            } else {
+                tvEmptyMessage.setText(getEmptyStateMessage());
+            }
+            showState(State.EMPTY);
+        } else {
+            // Siempre reemplazar la lista completa cuando vienen del ViewModel
+            // El ViewModel ya maneja la paginación agregando a la lista existente
+            adapter.setRecipes(recipes);
+            showState(State.CONTENT);
+        }
+    }
+
+    /**
+     * Maneja los errores
+     */
+    private void handleError(String message) {
+        if (adapter.getItemCount() == 0) {
+            tvErrorMessage.setText(message.equals(getString(R.string.error_no_connection))
+                    ? getString(R.string.error_state_offline_no_cache)
+                    : getString(R.string.error_state_message));
+            showState(State.ERROR);
+        } else {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void search(String query) {
         currentSearch = query;
-        currentSkip = 0;
-        hasMoreData = true;
-        loadRecipes();
+        loadRecipes(true);
     }
 
     @Override
     public void scrollToTopAndRefresh() {
         // Scroll al inicio
         recyclerView.smoothScrollToPosition(0);
-
         // Resetear y recargar
-        currentSkip = 0;
-        hasMoreData = true;
-        loadRecipes();
+        loadRecipes(true);
     }
 
     /**
-     * Método abstracto donde cada fragment intica qué recetas obtener
+     * Método abstracto donde cada fragment indica qué método del ViewModel usar
      */
-    protected abstract void fetchRecipes(String search, int skip, int limit, RecipeRepository.RecipeCallback callback);
+    protected abstract void loadRecipesFromViewModel(String search, boolean reset);
+
+    /**
+     * Método abstracto donde cada fragment indica qué LiveData observar
+     */
+    protected abstract androidx.lifecycle.LiveData<List<Recipe>> getRecipesLiveData();
 
     /**
      * Método abstracto donde cada fragment indica los mensajes de empty state

@@ -4,6 +4,9 @@
     <!-- LoginActivity -->
     <string name="login_btn_login">Log in</string>
     <string name="login_btn_register">Don\'t have an account</string>
+    <string name="login_success">Logged in!</string>
+    <string name="login_error_invalid_credentials">Invalid credentials!</string>
+    <string name="login_error_network">Network error. Please check your connection.</string>
 
     <!-- RegisterActivity -->
     <string name="register_title">Create Account</string>
@@ -53,6 +56,9 @@
     <string name="error_state_retry">Retry</string>
     <string name="error_state_offline_with_cache">Offline. Showing saved recipes.</string>
     <string name="error_state_offline_no_cache">Offline and no saved recipes.</string>
+    <string name="error_server">Server error</string>
+    <string name="error_connection">Connection error</string>
+    <string name="error_no_connection">No connection</string>
 
     <!-- HomeActivity -->
     <string name="home_title_explore">Explore</string>
@@ -77,8 +83,12 @@
     <string name="recipe_detail_add_to_cart">Add ingredients to cart</string>
     <string name="recipe_detail_step_prefix">Step %1$d</string>
     <string name="recipe_detail_ingredient_format">%1$s %2$s of %3$s</string>
+    <string name="recipe_detail_ingredient_bullet">• </string>
     <string name="recipe_detail_error_title">Error loading recipe</string>
+    <string name="recipe_detail_error_load">Error loading recipe</string>
     <string name="recipe_detail_error_message">Could not load recipe. Do you want to retry?</string>
+    <string name="recipe_detail_error_connection">Connection error</string>
+    <string name="recipe_detail_no_ingredients">No ingredients to add</string>
     <string name="recipe_detail_error_retry">Retry</string>
     <string name="recipe_detail_error_back">Back</string>
     <string name="recipe_detail_cart_mock">Cart functionality coming soon</string>
@@ -167,6 +177,7 @@
     <string name="cart_delete_confirmation_yes">Delete</string>
     <string name="cart_delete_confirmation_no">Cancel</string>
     <string name="cart_ingredients_added">Ingredients added to cart</string>
+    <string name="cart_ingredients_added_count">Ingredients added to cart (%1$d)</string>
 
     <!-- Accessibility Descriptions -->
     <string name="content_desc_app_logo">Application logo</string>

@@ -4,6 +4,9 @@
     <!-- LoginActivity -->
     <string name="login_btn_login">Ingresar</string>
     <string name="login_btn_register">No tengo una cuenta</string>
+    <string name="login_success">Logueado!</string>
+    <string name="login_error_invalid_credentials">Credenciales inválidas!</string>
+    <string name="login_error_network">Error de red. Verifique su conexión.</string>
 
     <!-- RegisterActivity -->
     <string name="register_title">Crear Cuenta</string>
@@ -53,6 +56,9 @@
     <string name="error_state_retry">Reintentar</string>
     <string name="error_state_offline_with_cache">Sin conexión. Mostrando recetas guardadas.</string>
     <string name="error_state_offline_no_cache">Sin conexión y no hay recetas guardadas.</string>
+    <string name="error_server">Error del servidor</string>
+    <string name="error_connection">Error de conexión</string>
+    <string name="error_no_connection">Sin conexión</string>
 
     <!-- HomeActivity -->
     <string name="home_title_explore">Explorar</string>
@@ -77,10 +83,14 @@
     <string name="recipe_detail_add_to_cart">Agregar ingredientes al carrito</string>
     <string name="recipe_detail_step_prefix">Paso %1$d</string>
     <string name="recipe_detail_ingredient_format">%1$s %2$s de %3$s</string>
+    <string name="recipe_detail_ingredient_bullet">• </string>
     <string name="recipe_detail_error_title">Error al cargar receta</string>
+    <string name="recipe_detail_error_load">Error al cargar la receta</string>
     <string name="recipe_detail_error_message">No se pudo cargar la receta. ¿Deseas reintentar?</string>
     <string name="recipe_detail_error_retry">Reintentar</string>
     <string name="recipe_detail_error_back">Volver</string>
+    <string name="recipe_detail_error_connection">Error de conexión</string>
+    <string name="recipe_detail_no_ingredients">No hay ingredientes para agregar</string>
     <string name="recipe_detail_cart_mock">Funcionalidad de carrito próximamente</string>
     <string name="recipe_detail_favorite_added">Agregado a favoritos</string>
     <string name="recipe_detail_favorite_removed">Eliminado de favoritos</string>
@@ -167,6 +177,7 @@
     <string name="cart_delete_confirmation_yes">Eliminar</string>
     <string name="cart_delete_confirmation_no">Cancelar</string>
     <string name="cart_ingredients_added">Ingredientes agregados al carrito</string>
+    <string name="cart_ingredients_added_count">Ingredientes agregados al carrito (%1$d)</string>
 
     <!-- Accessibility Descriptions -->
     <string name="content_desc_app_logo">Logo de la aplicación</string>

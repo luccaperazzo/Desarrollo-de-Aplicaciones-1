@@ -1,16 +1,26 @@
 package ar.edu.uade.recipes.fragment;
 
+import androidx.lifecycle.LiveData;
+
+import java.util.List;
+
 import ar.edu.uade.recipes.R;
-import ar.edu.uade.recipes.repository.RecipeRepository;
+import ar.edu.uade.recipes.model.Recipe;
+import ar.edu.uade.recipes.viewmodel.HomeViewModel;
 
 /**
- * Fragment que muestra las recetas del usuario (My Recipes)
+ * Fragment que muestra las recetas del usuario
  */
 public class MyRecipesFragment extends BaseRecipeListFragment {
 
     @Override
-    protected void fetchRecipes(String search, int skip, int limit, RecipeRepository.RecipeCallback callback) {
-        repository.getMyRecipes(search, skip, limit, callback);
+    protected void loadRecipesFromViewModel(String search, boolean reset) {
+        viewModel.loadMyRecipes(search, reset);
+    }
+
+    @Override
+    protected LiveData<List<Recipe>> getRecipesLiveData() {
+        return viewModel.getMyRecipes();
     }
 
     @Override

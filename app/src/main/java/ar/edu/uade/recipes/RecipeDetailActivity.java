@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -28,15 +29,10 @@ import java.util.concurrent.Executors;
 import ar.edu.uade.recipes.database.AppDatabase;
 import ar.edu.uade.recipes.database.CartDao;
 import ar.edu.uade.recipes.model.CartItem;
-import ar.edu.uade.recipes.model.RatingRequest;
 import ar.edu.uade.recipes.model.RecipeDetail;
 import ar.edu.uade.recipes.model.RecipeIngredient;
 import ar.edu.uade.recipes.model.RecipeStep;
-import ar.edu.uade.recipes.service.RecipeService;
-import ar.edu.uade.recipes.service.RetrofitClient;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import ar.edu.uade.recipes.viewmodel.RecipeDetailViewModel;
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
@@ -67,7 +63,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private LinearLayout avgRatingContainer;
     private LinearLayout userRatingContainer;
 
-    private RecipeService recipeService;
+    private RecipeDetailViewModel viewModel;
     private String recipeId;
     private RecipeDetail currentRecipe;
     private CartDao cartDao;
@@ -134,44 +130,86 @@ public class RecipeDetailActivity extends AppCompatActivity {
             toolbar.setTitle(recipeTitle);
         }
 
-        // Inicializar servicio
-        recipeService = RetrofitClient.getRetrofitInstance(this).create(RecipeService.class);
+        // Inicializar ViewModel
+        viewModel = new ViewModelProvider(this).get(RecipeDetailViewModel.class);
+
         cartDao = AppDatabase.getInstance(this).cartDao();
         executor = Executors.newSingleThreadExecutor();
+
+        // Configurar observadores
+        setupObservers();
 
         // Configurar botón de carrito
         btnAddToCart.setOnClickListener(v -> addIngredientsToCart());
 
         // Configurar botón de favoritos
-        btnFavorite.setOnClickListener(v -> toggleFavorite());
+        btnFavorite.setOnClickListener(v -> {
+            if (currentRecipe != null) {
+                viewModel.toggleFavorite(recipeId, currentRecipe.isFavorite());
+            }
+        });
 
         // Cargar datos de la receta
-        loadRecipeDetail();
+        viewModel.loadRecipeDetail(recipeId);
     }
 
-    private void loadRecipeDetail() {
-        showLoading(true);
+    private void setupObservers() {
+        // Observar receta
+        viewModel.getRecipeDetail().observe(this, recipe -> {
+            if (recipe != null) {
+                currentRecipe = recipe;
+                displayRecipeDetail(recipe);
+            }
+        });
 
-        recipeService.getRecipeDetail(recipeId).enqueue(new Callback<RecipeDetail>() {
-            @Override
-            public void onResponse(Call<RecipeDetail> call, Response<RecipeDetail> response) {
-                showLoading(false);
+        // Observar estado de carga
+        viewModel.getIsLoading().observe(this, isLoading -> {
+            showLoading(isLoading != null && isLoading);
+        });
 
-                if (response.isSuccessful() && response.body() != null) {
-                    currentRecipe = response.body();
-                    displayRecipeDetail(currentRecipe);
+        // Observar errores
+        viewModel.getErrorMessage().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                if (errorMessage.equals("DELETE_SUCCESS")) {
+                    // Eliminación exitosa
+                    Toast.makeText(this, R.string.delete_recipe_success, Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
+                    finish();
                 } else {
                     showErrorDialog();
                 }
+                viewModel.clearError();
             }
+        });
 
-            @Override
-            public void onFailure(Call<RecipeDetail> call, Throwable t) {
-                showLoading(false);
-                showErrorDialog();
+        // Observar cambios en favoritos
+        viewModel.getFavoriteUpdated().observe(this, updated -> {
+            if (updated != null && updated) {
+                String message = viewModel.getFavoriteMessage().getValue();
+                if (message != null && !message.isEmpty()) {
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                }
+                // Si se quitó de favoritos, notificar cambio
+                RecipeDetail current = viewModel.getRecipeDetail().getValue();
+                if (current != null && !current.isFavorite()) {
+                    setResult(RESULT_OK);
+                }
+                viewModel.resetUpdateStates();
+            }
+        });
+
+        // Observar cambios en rating
+        viewModel.getRatingUpdated().observe(this, updated -> {
+            if (updated != null && updated) {
+                String message = viewModel.getRatingMessage().getValue();
+                if (message != null) {
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                }
+                viewModel.resetUpdateStates();
             }
         });
     }
+
 
     private void displayRecipeDetail(RecipeDetail recipe) {
         // Título
@@ -254,47 +292,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         if (currentRecipe == null) return;
 
         int currentUserRating = currentRecipe.getUserRating();
-
-        // Determinar si es POST (nuevo rating) o PUT (actualizar rating)
-        Call<Void> call;
-        RatingRequest ratingRequest = new RatingRequest(newRating);
-
-        if (currentUserRating == 0) {
-            // POST - Nuevo rating
-            call = recipeService.addRating(recipeId, ratingRequest);
-        } else {
-            // PUT - Actualizar rating
-            call = recipeService.updateRating(recipeId, ratingRequest);
-        }
-
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    // Actualizar el rating localmente
-                    currentRecipe.setUserRating(newRating);
-                    displayUserRating(newRating);
-
-                    // Mostrar mensaje
-                    String message = currentUserRating == 0
-                        ? getString(R.string.recipe_detail_rating_added)
-                        : getString(R.string.recipe_detail_rating_updated);
-                    Toast.makeText(RecipeDetailActivity.this, message, Toast.LENGTH_SHORT).show();
-
-                    // Recargar la receta para obtener el nuevo avg_rating
-                    loadRecipeDetail();
-                } else {
-                    Toast.makeText(RecipeDetailActivity.this,
-                        R.string.recipe_detail_rating_error, Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(RecipeDetailActivity.this,
-                    R.string.recipe_detail_rating_error, Toast.LENGTH_SHORT).show();
-            }
-        });
+        viewModel.updateRating(recipeId, newRating, currentUserRating);
     }
 
     private void updateStars(ImageView[] stars, double rating) {
@@ -326,7 +324,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     ingredient.getUnitOfMeasure(),
                     ingredient.getName()
             );
-            tvIngredient.setText("• " + ingredientText);
+            tvIngredient.setText(getString(R.string.recipe_detail_ingredient_bullet) + ingredientText);
             tvIngredient.setTextSize(14);
             tvIngredient.setTextColor(com.google.android.material.color.MaterialColors.getColor(
                     this,
@@ -393,45 +391,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void toggleFavorite() {
-        if (currentRecipe == null) {
-            return;
-        }
-
-        boolean isFavorite = currentRecipe.isFavorite();
-        Call<Void> call = isFavorite
-                ? recipeService.removeFavorite(recipeId)
-                : recipeService.addFavorite(recipeId);
-
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    currentRecipe.setFavorite(!isFavorite);
-                    updateFavoriteButton(!isFavorite);
-
-                    int messageId = !isFavorite
-                            ? R.string.recipe_detail_favorite_added
-                            : R.string.recipe_detail_favorite_removed;
-                    Toast.makeText(RecipeDetailActivity.this, messageId, Toast.LENGTH_SHORT).show();
-
-                    if (isFavorite) {
-                        // Se quitó de favoritos, notificar cambio para actualizar la lista de la home
-                        setResult(RESULT_OK);
-                    }
-                } else {
-                    Toast.makeText(RecipeDetailActivity.this,
-                            "Error al actualizar favoritos", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(RecipeDetailActivity.this,
-                        "Error de conexión", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     private void updateFavoriteButton(boolean isFavorite) {
         btnFavorite.setImageResource(isFavorite
@@ -449,7 +408,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
         if (requestCode == REQUEST_EDIT_RECIPE && resultCode == RESULT_OK) {
             // Recargar el detalle de la receta después de editarla
             setResult(RESULT_OK);
-            loadRecipeDetail();
+            if (recipeId != null) {
+                viewModel.loadRecipeDetail(recipeId);
+            }
         }
     }
 
@@ -457,7 +418,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.recipe_detail_error_title)
                 .setMessage(R.string.recipe_detail_error_message)
-                .setPositiveButton(R.string.recipe_detail_error_retry, (dialog, which) -> loadRecipeDetail())
+                .setPositiveButton(R.string.recipe_detail_error_retry, (dialog, which) -> {
+                    if (recipeId != null) {
+                        viewModel.loadRecipeDetail(recipeId);
+                    }
+                })
                 .setNegativeButton(R.string.recipe_detail_error_back, (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
@@ -482,27 +447,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     }
 
     private void deleteRecipe() {
-        showLoading(true);
-
-        recipeService.deleteRecipe(recipeId).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                showLoading(false);
-                if (response.isSuccessful()) {
-                    Toast.makeText(RecipeDetailActivity.this, R.string.delete_recipe_success, Toast.LENGTH_SHORT).show();
-                    setResult(RESULT_OK); // Notificar que hubo cambios
-                    finish();
-                } else {
-                    Toast.makeText(RecipeDetailActivity.this, R.string.delete_recipe_error, Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                showLoading(false);
-                Toast.makeText(RecipeDetailActivity.this, R.string.delete_recipe_error, Toast.LENGTH_SHORT).show();
-            }
-        });
+        viewModel.deleteRecipe(recipeId);
     }
 
     @Override
@@ -533,14 +478,14 @@ public class RecipeDetailActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Recargar la receta cuando volvemos de editar
-        if (currentRecipe != null) {
-            loadRecipeDetail();
+        if (recipeId != null) {
+            viewModel.loadRecipeDetail(recipeId);
         }
     }
 
     private void addIngredientsToCart() {
         if (currentRecipe == null || currentRecipe.getIngredients() == null || currentRecipe.getIngredients().isEmpty()) {
-            Toast.makeText(this, "No hay ingredientes para agregar", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.recipe_detail_no_ingredients, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -558,7 +503,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
             final int finalCount = count;
             runOnUiThread(() -> {
-                String message = getString(R.string.cart_ingredients_added) + " (" + finalCount + ")";
+                String message = getString(R.string.cart_ingredients_added_count, finalCount);
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             });
         });

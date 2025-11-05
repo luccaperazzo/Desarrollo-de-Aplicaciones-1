@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (response.isSuccessful() && response.body() != null) {
                     // Lógica de login exitoso
-                    Toast.makeText(LoginActivity.this, "Logueado!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
 
                     if (tilEmail != null) tilEmail.setError(null);
                     if (tilPassword != null) tilPassword.setError(null);
@@ -143,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                     finish(); // evita volver al login con back
                 } else {
                     // Lógica de error
-                    String errorMessage = "Credenciales inválidas!";
+                    String errorMessage = getString(R.string.login_error_invalid_credentials);
                     try {
                         if (response.errorBody() != null) {
                             String errorBody = response.errorBody().string();
@@ -165,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 btnLogin.setEnabled(true);
 
-                Toast.makeText(LoginActivity.this, "Error de red. Verifique su conexión.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, R.string.login_error_network, Toast.LENGTH_SHORT).show();
 
                 // Mostrar error visual también en caso de fallo de red
                 if (tilEmail != null) tilEmail.setError("");

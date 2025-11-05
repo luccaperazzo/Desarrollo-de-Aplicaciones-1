@@ -48,6 +48,16 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         notifyItemRangeInserted(startPosition, newRecipes.size());
     }
 
+    public void addRecipe(Recipe recipe) {
+        int position = recipes.size();
+        recipes.add(recipe);
+        notifyItemInserted(position);
+    }
+
+    public List<Recipe> getRecipes() {
+        return new ArrayList<>(recipes);
+    }
+
     public void clearRecipes() {
         recipes.clear();
         notifyDataSetChanged();
