@@ -51,6 +51,9 @@ dependencies {
     implementation(libs.glide)
     annotationProcessor(libs.glide.compiler)
 
+    // ExifInterface para corregir orientación de imágenes
+    implementation(libs.exifinterface)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

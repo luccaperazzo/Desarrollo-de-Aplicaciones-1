@@ -279,7 +279,9 @@ public class RegisterActivity extends AppCompatActivity {
             // Mostrar preview de la imagen
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                ivProfileImage.setImageBitmap(bitmap);
+                // Corregir orientación EXIF para el preview
+                Bitmap correctedBitmap = ImageHelper.fixImageOrientation(this, imageUri, bitmap);
+                ivProfileImage.setImageBitmap(correctedBitmap);
                 ivProfileImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 ivProfileImage.setPadding(0, 0, 0, 0); // Quitar padding cuando hay imagen
             } catch (Exception e) {

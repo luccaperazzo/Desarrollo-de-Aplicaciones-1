@@ -42,6 +42,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_RECIPE_ID = "recipe_id";
     public static final String EXTRA_RECIPE_TITLE = "recipe_title";
+    private static final int REQUEST_EDIT_RECIPE = 201;
 
     private MaterialToolbar toolbar;
     private ImageView ivRecipeImage;
@@ -327,7 +328,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
             );
             tvIngredient.setText("• " + ingredientText);
             tvIngredient.setTextSize(14);
-            tvIngredient.setTextColor(getColor(android.R.color.black));
+            tvIngredient.setTextColor(com.google.android.material.color.MaterialColors.getColor(
+                    this,
+                    com.google.android.material.R.attr.colorOnSurface,
+                    android.graphics.Color.BLACK
+            ));
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -352,7 +357,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
             TextView tvStepTitle = new TextView(this);
             tvStepTitle.setText(getString(R.string.recipe_detail_step_prefix, step.getOrder()));
             tvStepTitle.setTextSize(16);
-            tvStepTitle.setTextColor(getColor(android.R.color.black));
+            tvStepTitle.setTextColor(com.google.android.material.color.MaterialColors.getColor(
+                    this,
+                    com.google.android.material.R.attr.colorOnSurface,
+                    android.graphics.Color.BLACK
+            ));
             tvStepTitle.setTypeface(null, android.graphics.Typeface.BOLD);
 
             LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
@@ -366,7 +375,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
             TextView tvStepDescription = new TextView(this);
             tvStepDescription.setText(step.getDescription());
             tvStepDescription.setTextSize(14);
-            tvStepDescription.setTextColor(getColor(android.R.color.black));
+            tvStepDescription.setTextColor(com.google.android.material.color.MaterialColors.getColor(
+                    this,
+                    com.google.android.material.R.attr.colorOnSurface,
+                    android.graphics.Color.BLACK
+            ));
 
             LinearLayout.LayoutParams descParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -425,6 +438,16 @@ public class RecipeDetailActivity extends AppCompatActivity {
         loadingOverlay.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_EDIT_RECIPE && resultCode == RESULT_OK) {
+            // Recargar el detalle de la receta después de editarla
+            setResult(RESULT_OK);
+            loadRecipeDetail();
+        }
+    }
+
     private void showErrorDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.recipe_detail_error_title)
@@ -441,8 +464,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CreateRecipeActivity.class);
         intent.putExtra(CreateRecipeActivity.EXTRA_RECIPE_ID, recipeId);
         intent.putExtra(CreateRecipeActivity.EXTRA_IS_EDIT_MODE, true);
-        startActivity(intent);
-        finish(); // Cerrar el detalle para que al volver se recargue
+        startActivityForResult(intent, REQUEST_EDIT_RECIPE);
     }
 
     private void showDeleteConfirmation() {
@@ -463,6 +485,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 showLoading(false);
                 if (response.isSuccessful()) {
                     Toast.makeText(RecipeDetailActivity.this, R.string.delete_recipe_success, Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK); // Notificar que hubo cambios
                     finish();
                 } else {
                     Toast.makeText(RecipeDetailActivity.this, R.string.delete_recipe_error, Toast.LENGTH_SHORT).show();

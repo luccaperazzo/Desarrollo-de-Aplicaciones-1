@@ -137,7 +137,9 @@ public class CreateRecipeActivity extends AppCompatActivity {
                     Uri imageUri = result.getData().getData();
                     try {
                         Bitmap bitmap = android.provider.MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                        processImage(bitmap);
+                        // Corregir orientación EXIF
+                        Bitmap correctedBitmap = ImageHelper.fixImageOrientation(this, imageUri, bitmap);
+                        processImage(correctedBitmap);
                     } catch (Exception e) {
                         Toast.makeText(this, R.string.register_error_processing_image, Toast.LENGTH_SHORT).show();
                     }
@@ -292,6 +294,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     int messageRes = isEditMode ? R.string.edit_recipe_success : R.string.create_recipe_success;
                     Toast.makeText(CreateRecipeActivity.this, messageRes, Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK); // Notificar que hubo cambios
                     finish();
                 } else {
                     int errorRes = isEditMode ? R.string.edit_recipe_error : R.string.create_recipe_error;

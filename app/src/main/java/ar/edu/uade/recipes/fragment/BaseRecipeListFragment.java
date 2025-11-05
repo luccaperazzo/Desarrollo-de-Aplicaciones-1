@@ -268,7 +268,16 @@ public abstract class BaseRecipeListFragment extends Fragment implements RecipeL
         Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
         intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE_ID, recipe.getId());
         intent.putExtra(RecipeDetailActivity.EXTRA_RECIPE_TITLE, recipe.getTitle());
-        startActivity(intent);
+        startActivityForResult(intent, 201); // Request code 201 para ver/editar/borrar receta
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 201 && resultCode == getActivity().RESULT_OK) {
+            // Recargar la lista si hubo cambios (edición o borrado)
+            scrollToTopAndRefresh();
+        }
     }
 }
 
