@@ -53,8 +53,7 @@
                         android:layout_height="wrap_content"
                         android:layout_toStartOf="@id/btnFavorite"
                         android:layout_marginEnd="8dp"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                         android:textColor="?attr/colorOnSurface" />
 
                     <ImageButton
@@ -74,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:textSize="14sp"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant" />
 
                 <!-- Owner Actions (Edit/Delete) -->
@@ -130,8 +129,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/recipe_detail_avg_rating_label"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                             android:layout_marginEnd="8dp"
                             android:textColor="?attr/colorOnSurface" />
 
@@ -183,7 +181,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:textSize="14sp"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             android:textColor="?attr/colorOnSurfaceVariant" />
 
                     </LinearLayout>
@@ -199,8 +197,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/recipe_detail_user_rating_label"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                             android:layout_marginEnd="8dp"
                             android:textColor="?attr/colorOnSurface" />
 
@@ -257,8 +254,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/recipe_detail_description_label"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:textColor="?attr/colorOnSurface" />
@@ -268,7 +264,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:textSize="14sp"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="?attr/colorOnSurface" />
 
                 <!-- Ingredients Section -->
@@ -277,8 +273,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/recipe_detail_ingredients_label"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:textColor="?attr/colorOnSurface" />
@@ -307,8 +302,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/recipe_detail_steps_label"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:textColor="?attr/colorOnSurface" />

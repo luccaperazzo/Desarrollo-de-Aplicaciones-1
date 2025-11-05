@@ -20,7 +20,8 @@
             android:id="@+id/checkboxCompleted"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"/>
+            android:layout_marginEnd="12dp"
+            android:contentDescription="@string/content_desc_cart_item_checkbox"/>
 
         <!-- Contenido del item -->
         <LinearLayout
@@ -34,8 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nombre del ingrediente"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="?attr/colorOnSurface"/>
 
             <TextView
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="250 gramos"
-                android:textSize="14sp"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="?attr/colorOnSurfaceVariant"/>
 
         </LinearLayout>

@@ -1,0 +1,188 @@
+<resources>
+    <string name="app_name">UADE Recipes App</string>
+
+    <!-- LoginActivity -->
+    <string name="login_btn_login">Log in</string>
+    <string name="login_btn_register">Don\'t have an account</string>
+
+    <!-- RegisterActivity -->
+    <string name="register_title">Create Account</string>
+    <string name="register_hint_username">Username</string>
+    <string name="register_hint_full_name">Full Name</string>
+    <string name="register_hint_email">Email</string>
+    <string name="register_hint_password">Password</string>
+    <string name="register_hint_confirm_password">Confirm password</string>
+    <string name="register_profile_image_description">Profile picture</string>
+    <string name="register_edit_profile_image">Edit profile picture</string>
+    <string name="register_btn_select_profile_image">Select profile picture (optional)</string>
+    <string name="register_profile_image_selected">Photo selected ✓</string>
+    <string name="register_checkbox_terms">I accept the Terms and Conditions</string>
+    <string name="register_btn_register">Sign Up</string>
+    <string name="register_btn_already_have_account">I already have an account</string>
+    <string name="register_error_passwords_dont_match">Passwords do not match</string>
+    <string name="register_error_passwords_not_match">Passwords do not match</string>
+    <string name="register_error_invalid_email">Invalid email</string>
+    <string name="register_error_empty_email">Email is required</string>
+    <string name="register_error_empty_username">Username is required</string>
+    <string name="register_error_empty_full_name">Full name is required</string>
+    <string name="register_error_short_password">Password must be at least 8 characters long</string>
+    <string name="register_error_password_lowercase">Password must contain at least one lowercase letter</string>
+    <string name="register_error_password_uppercase">Password must contain at least one uppercase letter</string>
+    <string name="register_error_password_number">Password must contain at least one number</string>
+    <string name="register_error_invalid_password">Password must be at least 8 characters long, with one uppercase letter, one lowercase letter and one number</string>
+    <string name="register_success">Registration successful! You can now sign in.</string>
+    <string name="register_error_title">Registration error</string>
+    <string name="register_error_network">Network error. Please check your connection.</string>
+    <string name="register_dialog_select_image_title">Select image</string>
+    <string name="register_dialog_option_camera">Camera</string>
+    <string name="register_dialog_option_gallery">Gallery</string>
+    <string name="register_error_permission_denied">Permission required to select image</string>
+    <string name="register_error_processing_image">Error processing image</string>
+    <string name="register_msg_returning_to_login">Returning to login</string>
+
+    <!-- Empty States -->
+    <string name="empty_state_title">No recipes</string>
+    <string name="empty_state_message">No recipes found</string>
+    <string name="empty_state_no_results">No results found for your search</string>
+    <string name="empty_state_no_favorites">You don\'t have any favorite recipes yet</string>
+    <string name="empty_state_no_my_recipes">You haven\'t created any recipes yet</string>
+
+    <!-- Error States -->
+    <string name="error_state_title">Connection error</string>
+    <string name="error_state_message">Could not load recipes</string>
+    <string name="error_state_retry">Retry</string>
+    <string name="error_state_offline_with_cache">Offline. Showing saved recipes.</string>
+    <string name="error_state_offline_no_cache">Offline and no saved recipes.</string>
+
+    <!-- HomeActivity -->
+    <string name="home_title_explore">Explore</string>
+    <string name="home_title_my_recipes">My Recipes</string>
+    <string name="home_title_favorites">Favorites</string>
+    <string name="home_search_hint">Search recipes…</string>
+    <string name="home_fab_add_recipe">Add recipe (mock)</string>
+
+    <!-- Recipe Item -->
+    <string name="recipe_author_prefix">By: %1$s</string>
+
+    <!-- Recipe Detail -->
+    <string name="recipe_detail_image_description">Recipe image</string>
+    <string name="recipe_detail_favorite_description">Add to favorites</string>
+    <string name="recipe_detail_avg_rating_label">Rating:</string>
+    <string name="recipe_detail_user_rating_label">Your rating:</string>
+    <string name="recipe_detail_star_description">Rating star</string>
+    <string name="recipe_detail_rating_format">%.1f</string>
+    <string name="recipe_detail_description_label">Description</string>
+    <string name="recipe_detail_ingredients_label">Ingredients</string>
+    <string name="recipe_detail_steps_label">Steps</string>
+    <string name="recipe_detail_add_to_cart">Add ingredients to cart</string>
+    <string name="recipe_detail_step_prefix">Step %1$d</string>
+    <string name="recipe_detail_ingredient_format">%1$s %2$s of %3$s</string>
+    <string name="recipe_detail_error_title">Error loading recipe</string>
+    <string name="recipe_detail_error_message">Could not load recipe. Do you want to retry?</string>
+    <string name="recipe_detail_error_retry">Retry</string>
+    <string name="recipe_detail_error_back">Back</string>
+    <string name="recipe_detail_cart_mock">Cart functionality coming soon</string>
+    <string name="recipe_detail_favorite_added">Added to favorites</string>
+    <string name="recipe_detail_favorite_removed">Removed from favorites</string>
+    <string name="recipe_detail_rating_added">Rating added</string>
+    <string name="recipe_detail_rating_updated">Rating updated</string>
+    <string name="recipe_detail_rating_error">Error saving rating</string>
+
+    <!-- Create Recipe -->
+    <string name="create_recipe_title">New Recipe</string>
+    <string name="create_recipe_upload_image">Upload recipe image</string>
+    <string name="create_recipe_image_preview">Image preview</string>
+    <string name="create_recipe_name_hint">Recipe name</string>
+    <string name="create_recipe_description_hint">Description</string>
+    <string name="create_recipe_steps_label">Steps</string>
+    <string name="create_recipe_step_hint">Step</string>
+    <string name="create_recipe_add_step">Add step</string>
+    <string name="create_recipe_remove_step">Remove step</string>
+    <string name="create_recipe_ingredients_label">Ingredients</string>
+    <string name="create_recipe_ingredient_name_hint">ingredient</string>
+    <string name="create_recipe_quantity_hint">quantity</string>
+    <string name="create_recipe_unit_hint">ml</string>
+    <string name="create_recipe_add_ingredient">Add ingredient</string>
+    <string name="create_recipe_remove_ingredient">Remove ingredient</string>
+    <string name="create_recipe_save">Save</string>
+    <string name="create_recipe_error_empty_fields">Please fill in all fields</string>
+    <string name="create_recipe_error_empty_steps">You must add at least one step</string>
+    <string name="create_recipe_error_empty_ingredients">You must add at least one ingredient</string>
+    <string name="create_recipe_error_no_image">You must select an image</string>
+    <string name="create_recipe_success">Recipe created successfully</string>
+    <string name="create_recipe_error">Error creating recipe</string>
+    <string name="create_recipe_select_image_title">Select image</string>
+    <string name="create_recipe_option_camera">Camera</string>
+    <string name="create_recipe_option_gallery">Gallery</string>
+
+    <!-- Edit Recipe -->
+    <string name="edit_recipe_title">Edit Recipe</string>
+    <string name="edit_recipe_success">Recipe updated successfully</string>
+    <string name="edit_recipe_error">Error updating recipe</string>
+
+    <!-- Delete Recipe -->
+    <string name="delete_recipe_title">Delete recipe</string>
+    <string name="delete_recipe_message">Are you sure you want to delete this recipe? This action cannot be undone.</string>
+    <string name="delete_recipe_confirm">Delete</string>
+    <string name="delete_recipe_cancel">Cancel</string>
+    <string name="delete_recipe_success">Recipe deleted successfully</string>
+    <string name="delete_recipe_error">Error deleting recipe</string>
+    <string name="recipe_detail_edit">Edit</string>
+    <string name="recipe_detail_delete">Delete</string>
+
+    <!-- Drawer Menu -->
+    <string name="drawer_hello">Hello, %1$s</string>
+    <string name="drawer_my_profile">My profile</string>
+    <string name="drawer_my_cart">My cart</string>
+    <string name="drawer_logout">Sign out</string>
+    <string name="drawer_logout_confirm_title">Sign out</string>
+    <string name="drawer_logout_confirm_message">Are you sure you want to sign out?</string>
+    <string name="drawer_logout_confirm_yes">Sign out</string>
+    <string name="drawer_logout_confirm_no">Cancel</string>
+
+    <!-- Profile Activity -->
+    <string name="profile_title">My Profile</string>
+    <string name="profile_save">Save changes</string>
+    <string name="profile_success">Profile updated successfully</string>
+    <string name="profile_error">Error updating profile</string>
+    <string name="profile_password_hint">New password (optional)</string>
+    <string name="profile_confirm_password_hint">Confirm new password</string>
+
+    <!-- Cart Activity -->
+    <string name="cart_title">Shopping Cart</string>
+    <string name="cart_empty_state_title">Empty cart</string>
+    <string name="cart_empty_state_message">Add ingredients from recipes or manually</string>
+    <string name="cart_add_item">Add ingredient</string>
+    <string name="cart_delete_item">Delete ingredient</string>
+    <string name="cart_add_item_dialog_title">Add ingredient</string>
+    <string name="cart_add_item_dialog_add">Add</string>
+    <string name="cart_add_item_dialog_cancel">Cancel</string>
+    <string name="cart_item_name_hint">Ingredient name</string>
+    <string name="cart_item_quantity_hint">Quantity</string>
+    <string name="cart_error_empty_fields">Please fill in all fields</string>
+    <string name="cart_item_added">Ingredient added</string>
+    <string name="cart_item_deleted">Ingredient deleted</string>
+    <string name="cart_delete_confirmation_title">Delete ingredient</string>
+    <string name="cart_delete_confirmation_message">Are you sure you want to delete this ingredient?</string>
+    <string name="cart_delete_confirmation_yes">Delete</string>
+    <string name="cart_delete_confirmation_no">Cancel</string>
+    <string name="cart_ingredients_added">Ingredients added to cart</string>
+
+    <!-- Accessibility Descriptions -->
+    <string name="content_desc_app_logo">Application logo</string>
+    <string name="content_desc_theme_mode">Theme mode icon</string>
+    <string name="content_desc_dark_mode_switch">Switch to dark mode</string>
+    <string name="content_desc_add_recipe">Add new recipe</string>
+    <string name="content_desc_recipe_image">Recipe image</string>
+    <string name="content_desc_back_button">Back</string>
+    <string name="content_desc_menu_button">Open menu</string>
+    <string name="content_desc_search">Search recipes</string>
+    <string name="content_desc_loading">Loading</string>
+    <string name="content_desc_cart_item_checkbox">Mark ingredient as completed</string>
+
+    <!-- Bottom Navigation -->
+    <string name="bottom_nav_explore">Explore</string>
+    <string name="bottom_nav_my_recipes">My recipes</string>
+    <string name="bottom_nav_favorites">Favorites</string>
+</resources>
+

@@ -37,6 +37,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="32dp"
                 android:background="?attr/colorPrimary"
+                android:contentDescription="@string/content_desc_app_logo"
                 android:src="@drawable/ic_launcher_foreground" />
 
             <!-- Campo Email -->
@@ -79,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:enabled="false"
-                android:text="Ingresar" />
+                android:text="@string/login_btn_login" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
@@ -94,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                android:text="No tengo cuenta" />
+                android:text="@string/login_btn_register" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

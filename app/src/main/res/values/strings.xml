@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">UADE Recipes App</string>
 
+    <!-- LoginActivity -->
+    <string name="login_btn_login">Ingresar</string>
+    <string name="login_btn_register">No tengo una cuenta</string>
+
     <!-- RegisterActivity -->
     <string name="register_title">Crear Cuenta</string>
     <string name="register_hint_username">Usuario</string>
@@ -163,4 +167,21 @@
     <string name="cart_delete_confirmation_yes">Eliminar</string>
     <string name="cart_delete_confirmation_no">Cancelar</string>
     <string name="cart_ingredients_added">Ingredientes agregados al carrito</string>
+
+    <!-- Accessibility Descriptions -->
+    <string name="content_desc_app_logo">Logo de la aplicación</string>
+    <string name="content_desc_theme_mode">Icono de modo de tema</string>
+    <string name="content_desc_dark_mode_switch">Cambiar a modo oscuro</string>
+    <string name="content_desc_add_recipe">Agregar nueva receta</string>
+    <string name="content_desc_recipe_image">Imagen de la receta</string>
+    <string name="content_desc_back_button">Volver</string>
+    <string name="content_desc_menu_button">Abrir menú</string>
+    <string name="content_desc_search">Buscar recetas</string>
+    <string name="content_desc_loading">Cargando</string>
+    <string name="content_desc_cart_item_checkbox">Marcar ingrediente como completado</string>
+
+    <!-- Bottom Navigation -->
+    <string name="bottom_nav_explore">Explorar</string>
+    <string name="bottom_nav_my_recipes">Mis recetas</string>
+    <string name="bottom_nav_favorites">Favoritas</string>
 </resources>

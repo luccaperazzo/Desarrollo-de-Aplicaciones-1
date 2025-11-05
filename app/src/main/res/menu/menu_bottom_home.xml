@@ -1,14 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_explore"
-        android:title="Explorar"
+        android:title="@string/bottom_nav_explore"
         android:icon="@drawable/ic_search_24"/>
     <item
         android:id="@+id/nav_my"
-        android:title="Mis recetas"
+        android:title="@string/bottom_nav_my_recipes"
         android:icon="@drawable/ic_outline_library_books_24"/>
     <item
         android:id="@+id/nav_favs"
-        android:title="Favoritas"
+        android:title="@string/bottom_nav_favorites"
         android:icon="@drawable/ic_outline_favorite_border_24"/>
 </menu>

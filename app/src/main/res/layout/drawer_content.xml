@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="@string/drawer_my_profile"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
             </LinearLayout>
@@ -92,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="@string/drawer_my_cart"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     android:textColor="?attr/colorOnSurface" />
 
             </LinearLayout>
@@ -129,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:text="@string/drawer_logout"
-                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     android:textColor="?attr/colorError" />
 
             </LinearLayout>
@@ -159,7 +159,7 @@
             android:layout_height="24dp"
             android:src="@drawable/ic_light_mode_24"
             app:tint="?attr/colorOnSurface"
-            android:contentDescription="@string/drawer_my_profile" />
+            android:contentDescription="@string/content_desc_theme_mode" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/switchTheme"
@@ -167,7 +167,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="Modo oscuro"
-            android:textColor="?attr/colorOnSurface" />
+            android:textColor="?attr/colorOnSurface"
+            android:contentDescription="@string/content_desc_dark_mode_switch" />
 
     </LinearLayout>
 
