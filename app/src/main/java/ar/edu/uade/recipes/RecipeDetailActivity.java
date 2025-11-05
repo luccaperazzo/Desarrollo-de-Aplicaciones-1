@@ -414,6 +414,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
                             ? R.string.recipe_detail_favorite_added
                             : R.string.recipe_detail_favorite_removed;
                     Toast.makeText(RecipeDetailActivity.this, messageId, Toast.LENGTH_SHORT).show();
+
+                    if (isFavorite) {
+                        // Se quitó de favoritos, notificar cambio para actualizar la lista de la home
+                        setResult(RESULT_OK);
+                    }
                 } else {
                     Toast.makeText(RecipeDetailActivity.this,
                             "Error al actualizar favoritos", Toast.LENGTH_SHORT).show();

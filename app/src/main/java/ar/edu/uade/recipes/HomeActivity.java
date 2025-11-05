@@ -366,6 +366,10 @@ public class HomeActivity extends AppCompatActivity {
             if (myRecipesFragment != null) {
                 myRecipesFragment.scrollToTopAndRefresh();
             }
+            // También recargar favoritos si hubo cambios (puede ser que se quitó un favorito)
+            if (favoritesFragment != null) {
+                favoritesFragment.scrollToTopAndRefresh();
+            }
         }
     }
 
