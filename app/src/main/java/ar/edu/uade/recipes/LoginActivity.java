@@ -29,6 +29,7 @@ import ar.edu.uade.recipes.model.LoginRequest;
 import ar.edu.uade.recipes.model.LoginResponse;
 import ar.edu.uade.recipes.service.AuthService;
 import ar.edu.uade.recipes.service.RetrofitClient;
+import ar.edu.uade.recipes.util.AnalyticsHelper;
 import ar.edu.uade.recipes.util.UserManager;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -138,6 +139,9 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.body().getUser() != null) {
                         userManager.saveUser(response.body().getUser());
                     }
+
+                    // Loguear evento de login
+                    AnalyticsHelper.logLogin(LoginActivity.this, "email");
 
                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     finish(); // evita volver al login con back

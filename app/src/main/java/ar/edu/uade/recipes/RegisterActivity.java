@@ -41,6 +41,7 @@ import ar.edu.uade.recipes.model.RegisterRequest;
 import ar.edu.uade.recipes.model.RegisterResponse;
 import ar.edu.uade.recipes.service.AuthService;
 import ar.edu.uade.recipes.service.RetrofitClient;
+import ar.edu.uade.recipes.util.AnalyticsHelper;
 import ar.edu.uade.recipes.util.ImageHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -312,6 +313,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(RegisterActivity.this, getString(R.string.register_success), Toast.LENGTH_SHORT).show();
+
+                    // Loguear evento de registro
+                    AnalyticsHelper.logRegister(RegisterActivity.this, "email");
+
                     finish(); // Volver al login
                 } else {
                     String errorMessage = getString(R.string.register_error_title);

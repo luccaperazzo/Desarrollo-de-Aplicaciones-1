@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "637995983333",
+    "project_id": "uade-recipes",
+    "storage_bucket": "uade-recipes.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637995983333:android:b9bb9520a3dd49d5b14f0c",
+        "android_client_info": {
+          "package_name": "ar.edu.uade.recipes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbzIy72cyKShpPobOskFLdyL0U4g4eLyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

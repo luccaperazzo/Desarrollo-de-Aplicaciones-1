@@ -34,6 +34,7 @@ import ar.edu.uade.recipes.fragment.FavoritesFragment;
 import ar.edu.uade.recipes.fragment.MyRecipesFragment;
 import ar.edu.uade.recipes.fragment.RecipeListFragment;
 import ar.edu.uade.recipes.model.User;
+import ar.edu.uade.recipes.util.AnalyticsHelper;
 import ar.edu.uade.recipes.util.UserManager;
 
 // TODO: verificar el tema de que todos los fragments hagan sus llamadas al abrir la app.
@@ -173,6 +174,7 @@ public class HomeActivity extends AppCompatActivity {
                     scrollToTopAndRefresh(exploreFragment);
                 } else {
                     loadFragment(exploreFragment, getString(R.string.home_title_explore));
+                    AnalyticsHelper.logNavigateTab(this, "explore");
                 }
                 return true;
             } else if (id == R.id.nav_my) {
@@ -181,6 +183,7 @@ public class HomeActivity extends AppCompatActivity {
                     scrollToTopAndRefresh(myRecipesFragment);
                 } else {
                     loadFragment(myRecipesFragment, getString(R.string.home_title_my_recipes));
+                    AnalyticsHelper.logNavigateTab(this, "my_recipes");
                 }
                 return true;
             } else if (id == R.id.nav_favs) {
@@ -189,6 +192,7 @@ public class HomeActivity extends AppCompatActivity {
                     scrollToTopAndRefresh(favoritesFragment);
                 } else {
                     loadFragment(favoritesFragment, getString(R.string.home_title_favorites));
+                    AnalyticsHelper.logNavigateTab(this, "favorites");
                 }
                 return true;
             }
@@ -261,6 +265,11 @@ public class HomeActivity extends AppCompatActivity {
     private void performSearch(String query) {
         if (currentFragment instanceof RecipeListFragment) {
             ((RecipeListFragment) currentFragment).search(query);
+
+            // Loguear evento de búsqueda si hay término
+            if (query != null && !query.trim().isEmpty()) {
+                AnalyticsHelper.logSearch(this, query.trim());
+            }
         }
     }
 
@@ -304,8 +313,10 @@ public class HomeActivity extends AppCompatActivity {
             // Aplicar tema inmediatamente
             if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                AnalyticsHelper.logThemeChange(this, "dark");
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                AnalyticsHelper.logThemeChange(this, "light");
             }
         });
     }

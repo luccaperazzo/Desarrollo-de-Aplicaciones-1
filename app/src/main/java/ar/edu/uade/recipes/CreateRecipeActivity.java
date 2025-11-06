@@ -35,6 +35,7 @@ import ar.edu.uade.recipes.model.RecipeIngredient;
 import ar.edu.uade.recipes.model.RecipeStep;
 import ar.edu.uade.recipes.service.RecipeService;
 import ar.edu.uade.recipes.service.RetrofitClient;
+import ar.edu.uade.recipes.util.AnalyticsHelper;
 import ar.edu.uade.recipes.util.ImageHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -291,9 +292,21 @@ public class CreateRecipeActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<RecipeDetail> call, Response<RecipeDetail> response) {
                 showLoading(false);
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
+                    RecipeDetail recipe = response.body();
                     int messageRes = isEditMode ? R.string.edit_recipe_success : R.string.create_recipe_success;
                     Toast.makeText(CreateRecipeActivity.this, messageRes, Toast.LENGTH_SHORT).show();
+
+                    // Loguear evento de creación o edición
+                    if (isEditMode) {
+                        AnalyticsHelper.logEditRecipe(CreateRecipeActivity.this, recipe.getId(), recipe.getTitle());
+                    } else {
+                        int ingredientsCount = recipe.getIngredients() != null ? recipe.getIngredients().size() : 0;
+                        int stepsCount = recipe.getSteps() != null ? recipe.getSteps().size() : 0;
+                        AnalyticsHelper.logCreateRecipe(CreateRecipeActivity.this, recipe.getId(),
+                            recipe.getTitle(), ingredientsCount, stepsCount);
+                    }
+
                     setResult(RESULT_OK); // Notificar que hubo cambios
                     finish();
                 } else {

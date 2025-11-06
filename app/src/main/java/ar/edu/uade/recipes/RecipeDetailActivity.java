@@ -32,6 +32,7 @@ import ar.edu.uade.recipes.model.CartItem;
 import ar.edu.uade.recipes.model.RecipeDetail;
 import ar.edu.uade.recipes.model.RecipeIngredient;
 import ar.edu.uade.recipes.model.RecipeStep;
+import ar.edu.uade.recipes.util.AnalyticsHelper;
 import ar.edu.uade.recipes.viewmodel.RecipeDetailViewModel;
 
 public class RecipeDetailActivity extends AppCompatActivity {
@@ -159,6 +160,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
             if (recipe != null) {
                 currentRecipe = recipe;
                 displayRecipeDetail(recipe);
+
+                // Loguear evento de visualización de receta
+                AnalyticsHelper.logViewRecipe(this, recipe.getId(), recipe.getTitle());
             }
         });
 
@@ -173,6 +177,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 if (errorMessage.equals("DELETE_SUCCESS")) {
                     // Eliminación exitosa
                     Toast.makeText(this, R.string.delete_recipe_success, Toast.LENGTH_SHORT).show();
+
+                    // Loguear evento de eliminación de receta
+                    if (currentRecipe != null) {
+                        AnalyticsHelper.logDeleteRecipe(this, currentRecipe.getId(), currentRecipe.getTitle());
+                    }
+
                     setResult(RESULT_OK);
                     finish();
                 } else {
@@ -191,8 +201,15 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 }
                 // Si se quitó de favoritos, notificar cambio
                 RecipeDetail current = viewModel.getRecipeDetail().getValue();
-                if (current != null && !current.isFavorite()) {
-                    setResult(RESULT_OK);
+                if (current != null) {
+                    if (current.isFavorite()) {
+                        // Loguear evento de agregar a favoritos
+                        AnalyticsHelper.logAddFavorite(this, current.getId(), current.getTitle());
+                    } else {
+                        // Loguear evento de remover de favoritos
+                        AnalyticsHelper.logRemoveFavorite(this, current.getId(), current.getTitle());
+                        setResult(RESULT_OK);
+                    }
                 }
                 viewModel.resetUpdateStates();
             }
@@ -204,6 +221,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 String message = viewModel.getRatingMessage().getValue();
                 if (message != null) {
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                }
+                // Loguear evento de rating
+                RecipeDetail current = viewModel.getRecipeDetail().getValue();
+                if (current != null) {
+                    AnalyticsHelper.logRateRecipe(this, current.getId(), current.getTitle(),
+                        current.getUserRating());
                 }
                 viewModel.resetUpdateStates();
             }
@@ -505,6 +528,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 String message = getString(R.string.cart_ingredients_added_count, finalCount);
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
+                // Loguear evento de agregar al carrito
+                if (currentRecipe != null) {
+                    AnalyticsHelper.logAddToCart(this, currentRecipe.getId(),
+                        currentRecipe.getTitle(), finalCount);
+                }
             });
         });
     }
