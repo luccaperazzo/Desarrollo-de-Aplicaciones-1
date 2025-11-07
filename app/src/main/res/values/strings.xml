@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UADE Recipes App</string>
+    <string name="app_name">Cookly</string>
 
     <!-- LoginActivity -->
     <string name="login_btn_login">Ingresar</string>
