@@ -102,9 +102,9 @@ public class OnboardingActivity extends AppCompatActivity {
         }
 
         if (position == adapter.getItemCount() - 1) {
-            nextButton.setText("Finish");
+            nextButton.setText("Terminar");
         } else {
-            nextButton.setText("Next");
+            nextButton.setText("Siguiente");
         }
     }
 
