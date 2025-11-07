@@ -1,6 +1,7 @@
 package ar.edu.uade.recipes;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -22,16 +23,23 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         new Handler().postDelayed(() -> {
-            UserManager userManager = new UserManager(SplashActivity.this);
+            SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+            boolean onboardingCompleted = prefs.getBoolean("onboarding_completed", false);
 
-            if (userManager.isLoggedIn()) {
-                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+            if (onboardingCompleted) {
+                UserManager userManager = new UserManager(SplashActivity.this);
+                if (userManager.isLoggedIn()) {
+                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                } else {
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                }
             } else {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                startActivity(new Intent(SplashActivity.this, OnboardingActivity.class));
             }
             finish();
         }, SPLASH_TIME_OUT);
     }
+
     private void applyTheme() {
         boolean isDarkMode = getSharedPreferences("settings", MODE_PRIVATE).getBoolean("dark_mode", false);
         if (isDarkMode) {
