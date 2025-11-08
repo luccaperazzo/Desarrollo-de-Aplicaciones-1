@@ -15,6 +15,13 @@ Este documento lista las heurísticas de usabilidad de Jakob Nielsen que están 
 - Mensajes de error claros y específicos según el tipo de problema
 - Indicación cuando se muestran datos desde caché (modo offline)
 
+**Evidencia**:
+|                                                        Indicador de Carga                                                         |                                                     Mensaje Toast                                                      |                                                        Offline                                                         |
+|:---------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------:|
+| ![Pantalla principal](C:\Users\lucca\AndroidStudioProjects\Desarrollo-de-Aplicaciones-1\nielsen-evidence\nielsen-evidence1.jpg) | ![asfssf](C:\Users\lucca\AndroidStudioProjects\Desarrollo-de-Aplicaciones-1\nielsen-evidence\nielsen-evidence1-2.jpg) | ![Detalle](C:\Users\lucca\AndroidStudioProjects\Desarrollo-de-Aplicaciones-1\nielsen-evidence\nielsen-evidence1-3.jpg) |
+
+
+
 ---
 
 ## 2. Correspondencia entre el Sistema y el Mundo Real ✅
@@ -26,6 +33,14 @@ Este documento lista las heurísticas de usabilidad de Jakob Nielsen que están 
 - Organización lógica: secciones de receta (Ingredientes y Pasos) que reflejan cómo se cocina en la vida real
 - Navegación intuitiva por categorías (Explorar, Mis Recetas, Favoritos)
 
+**Evidencia**:
+
+|                                                   Nombre de items en la barra de navegación                                                   |                                                     Barra Lateral                                                     |                                                      Crear Receta                                                      |
+|:-------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------:|
+| ![Pantalla principal](C:\Users\lucca\AndroidStudioProjects\Desarrollo-de-Aplicaciones-1\nielsen-evidence\nielsen-evidence2.jpg) | ![asfssf](C:\Users\lucca\AndroidStudioProjects\Desarrollo-de-Aplicaciones-1\nielsen-evidence\nielsen-evidence2-1.jpg) | ![Detalle](C:\Users\lucca\AndroidStudioProjects\Desarrollo-de-Aplicaciones-1\nielsen-evidence\nielsen-evidence2.3.jpg) |
+
+
+
 ---
 
 ## 3. Control y Libertad del Usuario ✅
@@ -36,6 +51,13 @@ Este documento lista las heurísticas de usabilidad de Jakob Nielsen que están 
 - Diálogos de confirmación para acciones destructivas (eliminar receta, cerrar sesión)
 - Botones de cancelar en todos los diálogos de confirmación
 - Posibilidad de volver sin guardar al crear o editar una receta
+
+**Evidencia**:
+
+|                                                   Confirmación para borrar receta                                              |                                                     Confirmación para desloguarse                                                    
+|:-------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------:|:-
+| ![Pantalla principal](C:\Users\lucca\AndroidStudioProjects\Desarrollo-de-Aplicaciones-1\nielsen-evidence\nielsen-evidence3.jpg) | ![asfssf](C:\Users\lucca\AndroidStudioProjects\Desarrollo-de-Aplicaciones-1\nielsen-evidence\nielsen-evidence3-2.jpg)
+
 
 ---
 
