@@ -1,9 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">UADE Recipes App</string>
+    <string name="app_name">Cookly</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_page1_title">Welcome to Cookly</string>
+    <string name="onboarding_page1_description">Your personal recipe assistant</string>
+    <string name="onboarding_page2_title">Find Recipes</string>
+    <string name="onboarding_page2_description">Add future recipes to your list to always have them available</string>
+    <string name="onboarding_page3_title">Create Your Recipes</string>
+    <string name="onboarding_page3_description">And publish them for the world to see</string>
+    <string name="onboarding_button_next">Next</string>
+    <string name="onboarding_button_finish">Finish</string>
+    <string name="onboarding_button_skip">Skip</string>
+    <string name="onboarding_button_back">Back</string>
 
     <!-- LoginActivity -->
-    <string name="login_btn_login">Log in</string>
-    <string name="login_btn_register">Don\'t have an account</string>
+    <string name="login_btn_login">Login</string>
+    <string name="login_btn_register">I don\'t have an account</string>
     <string name="login_success">Logged in!</string>
     <string name="login_error_invalid_credentials">Invalid credentials!</string>
     <string name="login_error_network">Network error. Please check your connection.</string>
@@ -15,12 +28,12 @@
     <string name="register_hint_email">Email</string>
     <string name="register_hint_password">Password</string>
     <string name="register_hint_confirm_password">Confirm password</string>
-    <string name="register_profile_image_description">Profile picture</string>
-    <string name="register_edit_profile_image">Edit profile picture</string>
+    <string name="register_profile_image_description">Profile image</string>
+    <string name="register_edit_profile_image">Edit profile image</string>
     <string name="register_btn_select_profile_image">Select profile picture (optional)</string>
     <string name="register_profile_image_selected">Photo selected ✓</string>
-    <string name="register_checkbox_terms">I accept the Terms and Conditions</string>
-    <string name="register_btn_register">Sign Up</string>
+    <string name="register_checkbox_terms">I agree to the Terms and Conditions</string>
+    <string name="register_btn_register">Register</string>
     <string name="register_btn_already_have_account">I already have an account</string>
     <string name="register_error_passwords_dont_match">Passwords do not match</string>
     <string name="register_error_passwords_not_match">Passwords do not match</string>
@@ -28,13 +41,13 @@
     <string name="register_error_empty_email">Email is required</string>
     <string name="register_error_empty_username">Username is required</string>
     <string name="register_error_empty_full_name">Full name is required</string>
-    <string name="register_error_short_password">Password must be at least 8 characters long</string>
+    <string name="register_error_short_password">Password must be at least 8 characters</string>
     <string name="register_error_password_lowercase">Password must contain at least one lowercase letter</string>
     <string name="register_error_password_uppercase">Password must contain at least one uppercase letter</string>
     <string name="register_error_password_number">Password must contain at least one number</string>
-    <string name="register_error_invalid_password">Password must be at least 8 characters long, with one uppercase letter, one lowercase letter and one number</string>
-    <string name="register_success">Registration successful! You can now sign in.</string>
-    <string name="register_error_title">Registration error</string>
+    <string name="register_error_invalid_password">Password must have at least 8 characters, one uppercase, one lowercase and one number</string>
+    <string name="register_success">Registration successful! You can now log in.</string>
+    <string name="register_error_title">Error registering</string>
     <string name="register_error_network">Network error. Please check your connection.</string>
     <string name="register_dialog_select_image_title">Select image</string>
     <string name="register_dialog_option_camera">Camera</string>
@@ -54,8 +67,8 @@
     <string name="error_state_title">Connection error</string>
     <string name="error_state_message">Could not load recipes</string>
     <string name="error_state_retry">Retry</string>
-    <string name="error_state_offline_with_cache">Offline. Showing saved recipes.</string>
-    <string name="error_state_offline_no_cache">Offline and no saved recipes.</string>
+    <string name="error_state_offline_with_cache">No connection. Showing saved recipes.</string>
+    <string name="error_state_offline_no_cache">No connection and no saved recipes.</string>
     <string name="error_server">Server error</string>
     <string name="error_connection">Connection error</string>
     <string name="error_no_connection">No connection</string>
@@ -64,7 +77,7 @@
     <string name="home_title_explore">Explore</string>
     <string name="home_title_my_recipes">My Recipes</string>
     <string name="home_title_favorites">Favorites</string>
-    <string name="home_search_hint">Search recipes…</string>
+    <string name="home_search_hint">Search for recipes…</string>
     <string name="home_fab_add_recipe">Add recipe (mock)</string>
 
     <!-- Recipe Item -->
@@ -86,11 +99,11 @@
     <string name="recipe_detail_ingredient_bullet">• </string>
     <string name="recipe_detail_error_title">Error loading recipe</string>
     <string name="recipe_detail_error_load">Error loading recipe</string>
-    <string name="recipe_detail_error_message">Could not load recipe. Do you want to retry?</string>
-    <string name="recipe_detail_error_connection">Connection error</string>
-    <string name="recipe_detail_no_ingredients">No ingredients to add</string>
+    <string name="recipe_detail_error_message">Could not load the recipe. Do you want to retry?</string>
     <string name="recipe_detail_error_retry">Retry</string>
     <string name="recipe_detail_error_back">Back</string>
+    <string name="recipe_detail_error_connection">Connection error</string>
+    <string name="recipe_detail_no_ingredients">No ingredients to add</string>
     <string name="recipe_detail_cart_mock">Cart functionality coming soon</string>
     <string name="recipe_detail_favorite_added">Added to favorites</string>
     <string name="recipe_detail_favorite_removed">Removed from favorites</string>
@@ -115,7 +128,7 @@
     <string name="create_recipe_add_ingredient">Add ingredient</string>
     <string name="create_recipe_remove_ingredient">Remove ingredient</string>
     <string name="create_recipe_save">Save</string>
-    <string name="create_recipe_error_empty_fields">Please fill in all fields</string>
+    <string name="create_recipe_error_empty_fields">Please fill all fields</string>
     <string name="create_recipe_error_empty_steps">You must add at least one step</string>
     <string name="create_recipe_error_empty_ingredients">You must add at least one ingredient</string>
     <string name="create_recipe_error_no_image">You must select an image</string>
@@ -144,10 +157,10 @@
     <string name="drawer_hello">Hello, %1$s</string>
     <string name="drawer_my_profile">My profile</string>
     <string name="drawer_my_cart">My cart</string>
-    <string name="drawer_logout">Sign out</string>
-    <string name="drawer_logout_confirm_title">Sign out</string>
-    <string name="drawer_logout_confirm_message">Are you sure you want to sign out?</string>
-    <string name="drawer_logout_confirm_yes">Sign out</string>
+    <string name="drawer_logout">Logout</string>
+    <string name="drawer_logout_confirm_title">Logout</string>
+    <string name="drawer_logout_confirm_message">Are you sure you want to logout?</string>
+    <string name="drawer_logout_confirm_yes">Logout</string>
     <string name="drawer_logout_confirm_no">Cancel</string>
 
     <!-- Profile Activity -->
@@ -169,7 +182,7 @@
     <string name="cart_add_item_dialog_cancel">Cancel</string>
     <string name="cart_item_name_hint">Ingredient name</string>
     <string name="cart_item_quantity_hint">Quantity</string>
-    <string name="cart_error_empty_fields">Please fill in all fields</string>
+    <string name="cart_error_empty_fields">Please fill all fields</string>
     <string name="cart_item_added">Ingredient added</string>
     <string name="cart_item_deleted">Ingredient deleted</string>
     <string name="cart_delete_confirmation_title">Delete ingredient</string>
@@ -185,7 +198,7 @@
     <string name="content_desc_dark_mode_switch">Switch to dark mode</string>
     <string name="content_desc_add_recipe">Add new recipe</string>
     <string name="content_desc_recipe_image">Recipe image</string>
-    <string name="content_desc_back_button">Back</string>
+    <string name="content_desc_back_button">Go back</string>
     <string name="content_desc_menu_button">Open menu</string>
     <string name="content_desc_search">Search recipes</string>
     <string name="content_desc_loading">Loading</string>
@@ -195,5 +208,5 @@
     <string name="bottom_nav_explore">Explore</string>
     <string name="bottom_nav_my_recipes">My recipes</string>
     <string name="bottom_nav_favorites">Favorites</string>
-</resources>
 
+</resources>

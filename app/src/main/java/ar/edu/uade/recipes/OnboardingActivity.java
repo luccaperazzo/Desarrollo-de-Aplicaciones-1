@@ -39,10 +39,9 @@ public class OnboardingActivity extends AppCompatActivity {
 
     private void setupViewPager() {
         adapter = new OnboardingAdapter(this);
-        // TODO: Replace with your actual content
-        adapter.addFragment(OnboardingPageFragment.newInstance("Bienvenido a Cookly", "Tu asistente personal de recetas", R.drawable.groceries));
-        adapter.addFragment(OnboardingPageFragment.newInstance("Encontrá recetas", "Agregá futuras recetas a tu lista para tenerlas siempre disponibles", R.drawable.recipes));
-        adapter.addFragment(OnboardingPageFragment.newInstance("Creá tus recetas", "Y publicalas para que todo el mundo las vea", R.drawable.media));
+        adapter.addFragment(OnboardingPageFragment.newInstance(getString(R.string.onboarding_page1_title), getString(R.string.onboarding_page1_description), R.drawable.groceries));
+        adapter.addFragment(OnboardingPageFragment.newInstance(getString(R.string.onboarding_page2_title), getString(R.string.onboarding_page2_description), R.drawable.recipes));
+        adapter.addFragment(OnboardingPageFragment.newInstance(getString(R.string.onboarding_page3_title), getString(R.string.onboarding_page3_description), R.drawable.media));
 
         viewPager.setAdapter(adapter);
         setupIndicators();
@@ -102,9 +101,9 @@ public class OnboardingActivity extends AppCompatActivity {
         }
 
         if (position == adapter.getItemCount() - 1) {
-            nextButton.setText("Terminar");
+            nextButton.setText(R.string.onboarding_button_finish);
         } else {
-            nextButton.setText("Siguiente");
+            nextButton.setText(R.string.onboarding_button_next);
         }
     }
 
