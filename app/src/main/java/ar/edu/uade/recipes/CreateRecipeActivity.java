@@ -1,7 +1,10 @@
 package ar.edu.uade.recipes;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +14,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,13 +32,18 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.uade.recipes.model.AudioStepsResponse;
 import ar.edu.uade.recipes.model.CreateRecipeRequest;
 import ar.edu.uade.recipes.model.RecipeDetail;
 import ar.edu.uade.recipes.model.RecipeIngredient;
 import ar.edu.uade.recipes.model.RecipeStep;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import ar.edu.uade.recipes.service.RecipeService;
 import ar.edu.uade.recipes.service.RetrofitClient;
 import ar.edu.uade.recipes.util.AnalyticsHelper;
@@ -55,6 +66,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
     private LinearLayout ingredientsContainer;
     private MaterialButton btnAddStep;
     private MaterialButton btnAddIngredient;
+    private MaterialButton btnRecordAudio;
     private MaterialButton btnSave;
     private View loadingOverlay;
 
@@ -66,7 +78,13 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> cameraLauncher;
     private ActivityResultLauncher<Intent> galleryLauncher;
+    private ActivityResultLauncher<String> audioPermissionLauncher;
     private String[] units;
+
+    private MediaRecorder mediaRecorder;
+    private String audioFilePath;
+    private boolean isRecording = false;
+    private static final int REQUEST_AUDIO_PERMISSION = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +107,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
         initializeViews();
         setupActivityResultLaunchers();
         setupListeners();
+        setupAudioPermissionLauncher();
 
         // Configurar título según el modo
         if (isEditMode) {
@@ -112,6 +131,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
         ingredientsContainer = findViewById(R.id.ingredientsContainer);
         btnAddStep = findViewById(R.id.btnAddStep);
         btnAddIngredient = findViewById(R.id.btnAddIngredient);
+        btnRecordAudio = findViewById(R.id.btnRecordAudio);
         btnSave = findViewById(R.id.btnSave);
         loadingOverlay = findViewById(R.id.loadingOverlay);
 
@@ -153,7 +173,21 @@ public class CreateRecipeActivity extends AppCompatActivity {
         btnUploadImage.setOnClickListener(v -> showImagePickerDialog());
         btnAddStep.setOnClickListener(v -> addStepInput());
         btnAddIngredient.setOnClickListener(v -> addIngredientInput());
+        btnRecordAudio.setOnClickListener(v -> handleAudioRecording());
         btnSave.setOnClickListener(v -> saveRecipe());
+    }
+
+    private void setupAudioPermissionLauncher() {
+        audioPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    startAudioRecording();
+                } else {
+                    Toast.makeText(this, R.string.create_recipe_audio_permission_denied, Toast.LENGTH_SHORT).show();
+                }
+            }
+        );
     }
 
     private void showImagePickerDialog() {
@@ -415,6 +449,186 @@ public class CreateRecipeActivity extends AppCompatActivity {
                 });
 
                 ingredientsContainer.addView(ingredientView);
+            }
+        }
+    }
+
+    private void handleAudioRecording() {
+        if (isRecording) {
+            stopAudioRecording();
+        } else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                    == PackageManager.PERMISSION_GRANTED) {
+                startAudioRecording();
+            } else {
+                audioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+            }
+        }
+    }
+
+    private void startAudioRecording() {
+        try {
+            // Crear archivo temporal para el audio
+            File audioFile = new File(getCacheDir(), "recipe_audio_" + System.currentTimeMillis() + ".3gp");
+            audioFilePath = audioFile.getAbsolutePath();
+
+            mediaRecorder = new MediaRecorder();
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mediaRecorder.setOutputFile(audioFilePath);
+            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+            mediaRecorder.prepare();
+            mediaRecorder.start();
+
+            isRecording = true;
+            btnRecordAudio.setText(R.string.create_recipe_audio_stop);
+            btnRecordAudio.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_media_pause));
+            Toast.makeText(this, R.string.create_recipe_audio_recording, Toast.LENGTH_SHORT).show();
+
+        } catch (IOException e) {
+            Toast.makeText(this, R.string.create_recipe_audio_error, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    private void stopAudioRecording() {
+        if (mediaRecorder != null && isRecording) {
+            try {
+                mediaRecorder.stop();
+                mediaRecorder.release();
+                mediaRecorder = null;
+                isRecording = false;
+
+                btnRecordAudio.setText(R.string.create_recipe_record_audio);
+                btnRecordAudio.setIcon(ContextCompat.getDrawable(this, android.R.drawable.ic_btn_speak_now));
+
+                // Enviar audio al backend
+                sendAudioToBackend();
+
+            } catch (Exception e) {
+                Toast.makeText(this, R.string.create_recipe_audio_error, Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+                isRecording = false;
+                btnRecordAudio.setText(R.string.create_recipe_record_audio);
+            }
+        }
+    }
+
+    private void sendAudioToBackend() {
+        if (audioFilePath == null || audioFilePath.isEmpty()) {
+            Toast.makeText(this, R.string.create_recipe_audio_error, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        File audioFile = new File(audioFilePath);
+        if (!audioFile.exists()) {
+            Toast.makeText(this, R.string.create_recipe_audio_error, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        showLoading(true);
+        Toast.makeText(this, R.string.create_recipe_audio_processing, Toast.LENGTH_SHORT).show();
+
+        // Crear RequestBody para el archivo de audio
+        RequestBody requestBody = RequestBody.create(
+            audioFile,
+            okhttp3.MediaType.parse("audio/3gpp")
+        );
+
+        // Crear MultipartBody.Part
+        MultipartBody.Part audioPart = MultipartBody.Part.createFormData(
+            "audio",
+            audioFile.getName(),
+            requestBody
+        );
+
+        // Enviar al backend
+        Call<AudioStepsResponse> call = recipeService.transcribeAudio(audioPart);
+        call.enqueue(new Callback<AudioStepsResponse>() {
+            @Override
+            public void onResponse(Call<AudioStepsResponse> call, Response<AudioStepsResponse> response) {
+                showLoading(false);
+                if (response.isSuccessful() && response.body() != null) {
+                    AudioStepsResponse audioResponse = response.body();
+                    List<String> steps = audioResponse.getSteps();
+
+                    if (steps != null && !steps.isEmpty()) {
+                        // Limpiar pasos existentes si es modo creación
+                        if (!isEditMode) {
+                            stepsContainer.removeAllViews();
+                        }
+
+                        // Agregar los pasos generados desde el audio
+                        for (int i = 0; i < steps.size(); i++) {
+                            View stepView = LayoutInflater.from(CreateRecipeActivity.this)
+                                .inflate(R.layout.item_step_input, stepsContainer, false);
+                            TextInputEditText etStep = stepView.findViewById(R.id.etStep);
+                            etStep.setText(steps.get(i));
+
+                            MaterialButton btnRemove = stepView.findViewById(R.id.btnRemoveStep);
+                            btnRemove.setOnClickListener(v -> {
+                                if (stepsContainer.getChildCount() > 1) {
+                                    stepsContainer.removeView(stepView);
+                                } else {
+                                    Toast.makeText(CreateRecipeActivity.this,
+                                        R.string.create_recipe_error_empty_steps, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            stepsContainer.addView(stepView);
+                        }
+
+                        Toast.makeText(CreateRecipeActivity.this,
+                            R.string.create_recipe_audio_success, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(CreateRecipeActivity.this,
+                            R.string.create_recipe_audio_error_server, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(CreateRecipeActivity.this,
+                        R.string.create_recipe_audio_error_server, Toast.LENGTH_SHORT).show();
+                }
+
+                // Limpiar archivo temporal
+                if (audioFile.exists()) {
+                    audioFile.delete();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AudioStepsResponse> call, Throwable t) {
+                showLoading(false);
+                Toast.makeText(CreateRecipeActivity.this,
+                    R.string.create_recipe_audio_error_network, Toast.LENGTH_SHORT).show();
+
+                // Limpiar archivo temporal
+                File audioFile = new File(audioFilePath);
+                if (audioFile.exists()) {
+                    audioFile.delete();
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaRecorder != null) {
+            if (isRecording) {
+                try {
+                    mediaRecorder.stop();
+                } catch (Exception e) { }
+            }
+            mediaRecorder.release();
+            mediaRecorder = null;
+        }
+
+        // Limpiar archivo temporal si existe
+        if (audioFilePath != null) {
+            File audioFile = new File(audioFilePath);
+            if (audioFile.exists()) {
+                audioFile.delete();
             }
         }
     }

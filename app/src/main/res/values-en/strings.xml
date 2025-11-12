@@ -137,6 +137,15 @@
     <string name="create_recipe_select_image_title">Select image</string>
     <string name="create_recipe_option_camera">Camera</string>
     <string name="create_recipe_option_gallery">Gallery</string>
+    <string name="create_recipe_record_audio">Record steps with audio</string>
+    <string name="create_recipe_audio_recording">Recording audio…</string>
+    <string name="create_recipe_audio_stop">Stop recording</string>
+    <string name="create_recipe_audio_permission_denied">Audio permission required</string>
+    <string name="create_recipe_audio_error">Error recording audio</string>
+    <string name="create_recipe_audio_processing">Processing audio…</string>
+    <string name="create_recipe_audio_success">Steps generated from audio</string>
+    <string name="create_recipe_audio_error_network">Error processing audio. Please check your connection.</string>
+    <string name="create_recipe_audio_error_server">Server error processing audio</string>
 
     <!-- Edit Recipe -->
     <string name="edit_recipe_title">Edit Recipe</string>

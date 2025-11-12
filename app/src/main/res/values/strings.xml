@@ -120,6 +120,15 @@
     <string name="create_recipe_step_hint">Paso</string>
     <string name="create_recipe_add_step">Agregar paso</string>
     <string name="create_recipe_remove_step">Eliminar paso</string>
+    <string name="create_recipe_record_audio">Grabar pasos con audio</string>
+    <string name="create_recipe_audio_recording">Grabando audio…</string>
+    <string name="create_recipe_audio_stop">Detener grabación</string>
+    <string name="create_recipe_audio_permission_denied">Permiso de audio requerido</string>
+    <string name="create_recipe_audio_error">Error al grabar audio</string>
+    <string name="create_recipe_audio_processing">Procesando audio…</string>
+    <string name="create_recipe_audio_success">Pasos generados desde audio</string>
+    <string name="create_recipe_audio_error_network">Error al procesar el audio. Verifica tu conexión.</string>
+    <string name="create_recipe_audio_error_server">Error del servidor al procesar el audio</string>
     <string name="create_recipe_ingredients_label">Ingredientes</string>
     <string name="create_recipe_ingredient_name_hint">ingrediente</string>
     <string name="create_recipe_quantity_hint">cantidad</string>

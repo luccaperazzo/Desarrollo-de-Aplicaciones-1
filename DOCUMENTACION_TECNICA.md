@@ -26,6 +26,7 @@
 - Autenticación de usuarios (login/registro)
 - Exploración de recetas públicas
 - Creación y edición de recetas propias
+- Grabación de audio para generar pasos de receta
 - Sistema de favoritos
 - Carrito de compras con ingredientes
 - Sistema de calificaciones (ratings)
@@ -89,6 +90,7 @@ app/src/main/java/ar/edu/uade/recipes/
 │   ├── MyRecipesFragment.java
 │   └── RecipeListFragment.java
 ├── model/                     # Modelos de datos
+│   ├── AudioStepsResponse.java
 │   ├── CartItem.java
 │   ├── CreateRecipeRequest.java
 │   ├── LoginRequest.java
@@ -133,6 +135,7 @@ app/src/main/java/ar/edu/uade/recipes/
 - **Android SDK**: Compile SDK 36, Min SDK 24, Target SDK 36
 - **Java**: 11
 - **Gradle**: 8.12.3
+- **MediaRecorder**: API nativa para grabación de audio
 
 ### UI/UX
 - **Material Design 3**: Componentes de Material Design
@@ -156,6 +159,7 @@ app/src/main/java/ar/edu/uade/recipes/
 
 ### Utilidades
 - **ExifInterface**: Corrección de orientación de imágenes
+- **MediaRecorder**: Grabación de audio para transcripción de pasos
 
 ---
 
@@ -246,6 +250,12 @@ app/src/main/java/ar/edu/uade/recipes/
   - Campos: título, descripción, imagen
   - Ingredientes dinámicos (nombre, cantidad, unidad)
   - Pasos dinámicos
+  - Grabación de audio para generar pasos:
+    - Uso de `MediaRecorder` para capturar audio
+    - Formato de audio: 3GP (AMR_NB encoder)
+    - Envío de audio al backend para transcripción
+    - Procesamiento de respuesta y generación automática de pasos
+    - Manejo de permisos de audio (RECORD_AUDIO)
   - Validación de campos requeridos
 
 #### ProfileActivity
@@ -379,6 +389,7 @@ https://tpo-desappi.vercel.app/
 - `DELETE /api/recipes/{id}/favorite` - Remover favorito
 - `POST /api/recipes/{id}/rating` - Agregar rating
 - `PUT /api/recipes/{id}/rating` - Actualizar rating
+- `POST /api/recipes/transcribe-audio` - Transcribir audio a pasos de receta (Multipart)
 
 ### Autenticación
 
@@ -391,6 +402,34 @@ https://tpo-desappi.vercel.app/
 - **Network Error**: Muestra mensaje de "Sin conexión"
 - **Server Error (4xx/5xx)**: Muestra mensaje del servidor
 - **Timeout**: Manejo de timeouts de OkHttp
+
+### Transcripción de Audio
+
+#### Endpoint de Transcripción
+- **URL**: `POST /api/recipes/transcribe-audio`
+- **Método**: Multipart POST
+- **Parámetro**: `audio` (archivo de audio en formato 3GP)
+- **Respuesta**: `AudioStepsResponse` con lista de pasos formateados
+  ```json
+  {
+    "steps": ["Paso 1", "Paso 2", "Paso 3"]
+  }
+  ```
+
+#### Flujo de Grabación
+1. Usuario inicia grabación → `MediaRecorder.start()`
+2. Audio se guarda temporalmente en cache del dispositivo
+3. Al detener grabación → `MediaRecorder.stop()`
+4. Archivo se convierte a `MultipartBody.Part`
+5. Envío al backend mediante Retrofit
+6. Backend procesa audio y devuelve pasos formateados
+7. Pasos se agregan automáticamente al formulario
+8. Archivo temporal se elimina después del procesamiento
+
+#### Permisos
+- **RECORD_AUDIO**: Requerido para acceder al micrófono
+- Solicitud mediante `ActivityResultLauncher` (Android 6.0+)
+- Manejo de denegación de permisos con mensaje informativo
 
 ---
 
@@ -428,6 +467,7 @@ Firebase se inicializa en `RecipesApplication.onCreate()`
 - `navigate_tab` - Navegación entre tabs
 - `add_to_cart` - Agregar ingredientes al carrito
 - `theme_change` - Cambio de tema
+- `transcribe_audio` - Transcripción de audio a pasos
 
 ### Helper Class
 

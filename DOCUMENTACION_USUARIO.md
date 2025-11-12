@@ -31,7 +31,7 @@ UADE Recipes App es una aplicación móvil que te permite descubrir, crear y ges
 
 - **Sistema Operativo**: Android 7.0 (Nougat) o superior
 - **Conexión a Internet**: Requerida para la mayoría de funciones
-- **Permisos**: Cámara y almacenamiento (opcionales, para fotos)
+- **Permisos**: Cámara y almacenamiento (opcionales, para fotos), Micrófono (opcional, para grabar pasos con audio)
 
 ### Instalación
 
@@ -144,6 +144,14 @@ En la parte inferior de la pantalla encontrarás tres pestañas:
      - Toca "Agregar paso" para cada paso
      - Describe el paso de preparación
      - Los pasos se ordenan automáticamente
+     - Alternativa con Audio: Puedes grabar los pasos con tu voz
+       - Toca el botón **"Grabar pasos con audio"** 🎤
+       - La aplicación solicitará permiso para usar el micrófono (solo la primera vez)
+       - Toca el botón nuevamente para iniciar la grabación
+       - Habla claramente describiendo los pasos de tu receta
+       - Toca **"Detener grabación"** cuando termines
+       - El audio se procesará automáticamente y los pasos se generarán en el formulario
+       - Puedes editar los pasos generados si es necesario
 3. Toca **"Guardar"** para publicar tu receta
 
 ### Requisitos
@@ -168,6 +176,15 @@ En la parte inferior de la pantalla encontrarás tres pestañas:
 ### Nota
 
 Solo puedes editar las recetas que has creado tú mismo.
+
+### Grabar Pasos con Audio
+
+También puedes usar la funcionalidad de grabación de audio al editar una receta:
+
+1. Abre la receta en modo edición
+2. Toca el botón **"Grabar pasos con audio"** 🎤
+3. Los pasos generados se agregarán a los existentes (no se reemplazan)
+4. Puedes editar o eliminar los pasos generados como cualquier otro paso
 
 ---
 
