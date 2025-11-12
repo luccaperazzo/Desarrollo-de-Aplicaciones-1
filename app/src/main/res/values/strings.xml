@@ -1,6 +1,18 @@
 <resources>
     <string name="app_name">Cookly</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_page1_title">Bienvenido a Cookly</string>
+    <string name="onboarding_page1_description">Tu asistente personal de recetas</string>
+    <string name="onboarding_page2_title">Encontrá recetas</string>
+    <string name="onboarding_page2_description">Agregá futuras recetas a tu lista para tenerlas siempre disponibles</string>
+    <string name="onboarding_page3_title">Creá tus recetas</string>
+    <string name="onboarding_page3_description">Y publicalas para que todo el mundo las vea</string>
+    <string name="onboarding_button_next">Siguiente</string>
+    <string name="onboarding_button_finish">Terminar</string>
+    <string name="onboarding_button_skip">Saltear</string>
+    <string name="onboarding_button_back">Atrás</string>
+
     <!-- LoginActivity -->
     <string name="login_btn_login">Ingresar</string>
     <string name="login_btn_register">No tengo una cuenta</string>
