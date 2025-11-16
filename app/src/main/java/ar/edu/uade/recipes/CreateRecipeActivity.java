@@ -88,19 +88,20 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
         recipeService = RetrofitClient.getRetrofitInstance(this).create(RecipeService.class);
         units = getResources().getStringArray(R.array.units_array);
-
+        // Obtener datos del intent
         recipeId = getIntent().getStringExtra(EXTRA_RECIPE_ID);
         isEditMode = getIntent().getBooleanExtra(EXTRA_IS_EDIT_MODE, false);
 
         initializeViews();
         setupActivityResultLaunchers();
         setupListeners();
-
+        // Configurar título según el modo
         if (isEditMode) {
             toolbar.setTitle(R.string.edit_recipe_title);
             loadRecipeForEdit();
         } else {
             toolbar.setTitle(R.string.create_recipe_title);
+            // Agregar primer paso e ingrediente por defecto
             addStepInput();
             addIngredientInput();
         }
@@ -143,6 +144,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
                         Uri imageUri = result.getData().getData();
                         try {
                             Bitmap bitmap = android.provider.MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                            // Corregir orientación EXIF
                             Bitmap correctedBitmap = ImageHelper.fixImageOrientation(this, imageUri, bitmap);
                             processImage(correctedBitmap);
                         } catch (Exception e) {
@@ -262,6 +264,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
     }
 
     private void saveRecipe() {
+        // Validar campos
         String title = etRecipeName.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
         if (title.isEmpty() || description.isEmpty()) {
@@ -272,7 +275,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.create_recipe_error_no_image, Toast.LENGTH_SHORT).show();
             return;
         }
-
+        // Obtener pasos
         List<RecipeStep> steps = new ArrayList<>();
         for (int i = 0; i < stepsContainer.getChildCount(); i++) {
             View stepView = stepsContainer.getChildAt(i);
@@ -287,7 +290,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
             step.setDescription(stepText);
             steps.add(step);
         }
-
+        // Obtener ingredientes
         List<RecipeIngredient> ingredients = new ArrayList<>();
         for (int i = 0; i < ingredientsContainer.getChildCount(); i++) {
             View ingredientView = ingredientsContainer.getChildAt(i);
@@ -304,8 +307,10 @@ public class CreateRecipeActivity extends AppCompatActivity {
             RecipeIngredient ingredient = new RecipeIngredient(name, quantity, unit);
             ingredients.add(ingredient);
         }
+        // Crear request
 
         CreateRecipeRequest request = new CreateRecipeRequest(title, description, ingredients, steps, imageBase64);
+        // Enviar al backend
 
         showLoading(true);
         Call<RecipeDetail> call = isEditMode
@@ -320,6 +325,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
                     RecipeDetail recipe = response.body();
                     int messageRes = isEditMode ? R.string.edit_recipe_success : R.string.create_recipe_success;
                     Toast.makeText(CreateRecipeActivity.this, messageRes, Toast.LENGTH_SHORT).show();
+                    // Loguear evento de creación o edición
 
                     if (isEditMode) {
                         AnalyticsHelper.logEditRecipe(CreateRecipeActivity.this, recipe.getId(), recipe.getTitle());
@@ -330,7 +336,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
                                 recipe.getTitle(), ingredientsCount, stepsCount);
                     }
 
-                    setResult(RESULT_OK);
+                    setResult(RESULT_OK); // Notificar que hubo cambios
                     finish();
                 } else {
                     int errorRes = isEditMode ? R.string.edit_recipe_error : R.string.create_recipe_error;
@@ -377,15 +383,21 @@ public class CreateRecipeActivity extends AppCompatActivity {
     }
 
     private void populateFields(RecipeDetail recipe) {
+        // Título y descripción
         etRecipeName.setText(recipe.getTitle());
         etDescription.setText(recipe.getDescription());
+        // Imagen
+
         if (recipe.getImageUrl() != null && !recipe.getImageUrl().isEmpty()) {
             imageBase64 = recipe.getImageUrl();
+            // Cargar imagen con Glide
+
             com.bumptech.glide.Glide.with(this)
                     .load(recipe.getImageUrl())
                     .into(ivRecipePreview);
             ivRecipePreview.setVisibility(View.VISIBLE);
         }
+        // Pasos
 
         if (recipe.getSteps() != null) {
             stepsContainer.removeAllViews();
@@ -393,6 +405,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
                 addStepInputWithText(step.getDescription());
             }
         }
+        // Ingredientes
 
         if (recipe.getIngredients() != null) {
             ingredientsContainer.removeAllViews();
@@ -407,6 +420,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
         TextInputEditText etStep = stepView.findViewById(R.id.etStep);
         etStep.setText(text);
         MaterialButton btnRemove = stepView.findViewById(R.id.btnRemoveStep);
+        // Solo permitir eliminar si hay más de un paso
         btnRemove.setOnClickListener(v -> {
             if (stepsContainer.getChildCount() > 1) {
                 stepsContainer.removeView(stepView);
@@ -424,10 +438,12 @@ public class CreateRecipeActivity extends AppCompatActivity {
         AutoCompleteTextView spinnerUnit = ingredientView.findViewById(R.id.spinnerUnit);
         etName.setText(name);
         etQuantity.setText(quantity);
+        // Configurar spinner de unidades
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, units);
         spinnerUnit.setAdapter(adapter);
         spinnerUnit.setText(unit, false);
         MaterialButton btnRemove = ingredientView.findViewById(R.id.btnRemoveIngredient);
+        // Solo permitir eliminar si hay más de un ingrediente
         btnRemove.setOnClickListener(v -> {
             if (ingredientsContainer.getChildCount() > 1) {
                 ingredientsContainer.removeView(ingredientView);
