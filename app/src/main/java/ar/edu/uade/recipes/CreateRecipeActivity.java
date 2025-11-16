@@ -1,22 +1,27 @@
 package ar.edu.uade.recipes;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -24,10 +29,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ar.edu.uade.recipes.model.CreateRecipeRequest;
 import ar.edu.uade.recipes.model.RecipeDetail;
@@ -55,6 +60,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
     private LinearLayout ingredientsContainer;
     private MaterialButton btnAddStep;
     private MaterialButton btnAddIngredient;
+    private ImageButton btnVoiceInputSteps;
     private MaterialButton btnSave;
     private View loadingOverlay;
 
@@ -66,12 +72,13 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> cameraLauncher;
     private ActivityResultLauncher<Intent> galleryLauncher;
+    private ActivityResultLauncher<String> requestPermissionLauncher;
+    private ActivityResultLauncher<Intent> speechRecognizerLauncherSteps;
     private String[] units;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_create_recipe);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -82,7 +89,6 @@ public class CreateRecipeActivity extends AppCompatActivity {
         recipeService = RetrofitClient.getRetrofitInstance(this).create(RecipeService.class);
         units = getResources().getStringArray(R.array.units_array);
 
-        // Obtener datos del intent
         recipeId = getIntent().getStringExtra(EXTRA_RECIPE_ID);
         isEditMode = getIntent().getBooleanExtra(EXTRA_IS_EDIT_MODE, false);
 
@@ -90,13 +96,11 @@ public class CreateRecipeActivity extends AppCompatActivity {
         setupActivityResultLaunchers();
         setupListeners();
 
-        // Configurar título según el modo
         if (isEditMode) {
             toolbar.setTitle(R.string.edit_recipe_title);
             loadRecipeForEdit();
         } else {
             toolbar.setTitle(R.string.create_recipe_title);
-            // Agregar primer paso e ingrediente por defecto
             addStepInput();
             addIngredientInput();
         }
@@ -112,6 +116,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
         ingredientsContainer = findViewById(R.id.ingredientsContainer);
         btnAddStep = findViewById(R.id.btnAddStep);
         btnAddIngredient = findViewById(R.id.btnAddIngredient);
+        btnVoiceInputSteps = findViewById(R.id.btnVoiceInputSteps);
         btnSave = findViewById(R.id.btnSave);
         loadingOverlay = findViewById(R.id.loadingOverlay);
 
@@ -121,31 +126,50 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
     private void setupActivityResultLaunchers() {
         cameraLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Bundle extras = result.getData().getExtras();
-                    Bitmap imageBitmap = (Bitmap) extras.get("data");
-                    processImage(imageBitmap);
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Bundle extras = result.getData().getExtras();
+                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+                        processImage(imageBitmap);
+                    }
                 }
-            }
         );
 
         galleryLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Uri imageUri = result.getData().getData();
-                    try {
-                        Bitmap bitmap = android.provider.MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                        // Corregir orientación EXIF
-                        Bitmap correctedBitmap = ImageHelper.fixImageOrientation(this, imageUri, bitmap);
-                        processImage(correctedBitmap);
-                    } catch (Exception e) {
-                        Toast.makeText(this, R.string.register_error_processing_image, Toast.LENGTH_SHORT).show();
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri imageUri = result.getData().getData();
+                        try {
+                            Bitmap bitmap = android.provider.MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                            Bitmap correctedBitmap = ImageHelper.fixImageOrientation(this, imageUri, bitmap);
+                            processImage(correctedBitmap);
+                        } catch (Exception e) {
+                            Toast.makeText(this, R.string.register_error_processing_image, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
+        );
+
+        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                handleVoiceInput(speechRecognizerLauncherSteps);
+            } else {
+                Toast.makeText(this, "Permission denied. Cannot use voice input.", Toast.LENGTH_SHORT).show();
             }
+        });
+
+        speechRecognizerLauncherSteps = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        ArrayList<String> results = result.getData().getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                        if (results != null && !results.isEmpty()) {
+                            processSpokenSteps(results.get(0));
+                        }
+                    }
+                }
         );
     }
 
@@ -154,32 +178,59 @@ public class CreateRecipeActivity extends AppCompatActivity {
         btnAddStep.setOnClickListener(v -> addStepInput());
         btnAddIngredient.setOnClickListener(v -> addIngredientInput());
         btnSave.setOnClickListener(v -> saveRecipe());
+        btnVoiceInputSteps.setOnClickListener(v -> handleVoiceInput(speechRecognizerLauncherSteps));
+    }
+
+    private void handleVoiceInput(ActivityResultLauncher<Intent> launcher) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            launchSpeechRecognizer(launcher);
+        } else if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
+            showPermissionRationaleDialog(launcher);
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+        }
+    }
+
+    private void launchSpeechRecognizer(ActivityResultLauncher<Intent> launcher) {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now...");
+        launcher.launch(intent);
+    }
+
+    private void showPermissionRationaleDialog(ActivityResultLauncher<Intent> launcher) {
+        new AlertDialog.Builder(this)
+                .setTitle("Microphone Permission Needed")
+                .setMessage("This feature requires microphone access to transcribe your speech. Please allow the permission.")
+                .setPositiveButton("OK", (dialog, which) -> launchSpeechRecognizer(launcher))
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void showImagePickerDialog() {
         new AlertDialog.Builder(this)
-            .setTitle(R.string.create_recipe_select_image_title)
-            .setItems(new String[]{
-                getString(R.string.create_recipe_option_camera),
-                getString(R.string.create_recipe_option_gallery)
-            }, (dialog, which) -> {
-                if (which == 0) {
-                    Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    cameraLauncher.launch(takePictureIntent);
-                } else {
-                    Intent pickPhotoIntent = new Intent(Intent.ACTION_PICK);
-                    pickPhotoIntent.setType("image/*");
-                    galleryLauncher.launch(pickPhotoIntent);
-                }
-            })
-            .show();
+                .setTitle(R.string.create_recipe_select_image_title)
+                .setItems(new String[]{
+                        getString(R.string.create_recipe_option_camera),
+                        getString(R.string.create_recipe_option_gallery)
+                }, (dialog, which) -> {
+                    if (which == 0) {
+                        Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        cameraLauncher.launch(takePictureIntent);
+                    } else {
+                        Intent pickPhotoIntent = new Intent(Intent.ACTION_PICK);
+                        pickPhotoIntent.setType("image/*");
+                        galleryLauncher.launch(pickPhotoIntent);
+                    }
+                })
+                .show();
     }
 
     private void processImage(Bitmap bitmap) {
         try {
             Bitmap resizedBitmap = ImageHelper.resizeBitmap(bitmap, 800);
             imageBase64 = ImageHelper.bitmapToBase64(resizedBitmap);
-
             ivRecipePreview.setImageBitmap(resizedBitmap);
             ivRecipePreview.setVisibility(View.VISIBLE);
         } catch (Exception e) {
@@ -187,106 +238,79 @@ public class CreateRecipeActivity extends AppCompatActivity {
         }
     }
 
-    private void addStepInput() {
-        View stepView = LayoutInflater.from(this).inflate(R.layout.item_step_input, stepsContainer, false);
-        MaterialButton btnRemove = stepView.findViewById(R.id.btnRemoveStep);
-
-        // Solo permitir eliminar si hay más de un paso
-        btnRemove.setOnClickListener(v -> {
-            if (stepsContainer.getChildCount() > 1) {
-                stepsContainer.removeView(stepView);
-            } else {
-                Toast.makeText(this, R.string.create_recipe_error_empty_steps, Toast.LENGTH_SHORT).show();
+    private void processSpokenSteps(String spokenText) {
+        if (stepsContainer.getChildCount() == 1) {
+            TextInputEditText etStep = stepsContainer.getChildAt(0).findViewById(R.id.etStep);
+            if (etStep.getText().toString().isEmpty()) {
+                stepsContainer.removeViewAt(0);
             }
-        });
-
-        stepsContainer.addView(stepView);
+        }
+        String separator = getString(R.string.voice_input_step_separator);
+        String[] steps = spokenText.split("(?i)" + separator);
+        for (String step : steps) {
+            if (!step.trim().isEmpty()) {
+                addStepInputWithText(step.trim());
+            }
+        }
+    }
+    private void addStepInput() {
+        addStepInputWithText("");
     }
 
     private void addIngredientInput() {
-        View ingredientView = LayoutInflater.from(this).inflate(R.layout.item_ingredient_input, ingredientsContainer, false);
-        MaterialButton btnRemove = ingredientView.findViewById(R.id.btnRemoveIngredient);
-        AutoCompleteTextView spinnerUnit = ingredientView.findViewById(R.id.spinnerUnit);
-
-        // Configurar spinner de unidades
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, units);
-        spinnerUnit.setAdapter(adapter);
-        spinnerUnit.setText(units[0], false); // Valor por defecto
-
-        // Solo permitir eliminar si hay más de un ingrediente
-        btnRemove.setOnClickListener(v -> {
-            if (ingredientsContainer.getChildCount() > 1) {
-                ingredientsContainer.removeView(ingredientView);
-            } else {
-                Toast.makeText(this, R.string.create_recipe_error_empty_ingredients, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        ingredientsContainer.addView(ingredientView);
+        addIngredientInputWithData("", "", "");
     }
 
     private void saveRecipe() {
-        // Validar campos
         String title = etRecipeName.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
-
         if (title.isEmpty() || description.isEmpty()) {
             Toast.makeText(this, R.string.create_recipe_error_empty_fields, Toast.LENGTH_SHORT).show();
             return;
         }
-
         if (imageBase64 == null || imageBase64.isEmpty()) {
             Toast.makeText(this, R.string.create_recipe_error_no_image, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Obtener pasos
         List<RecipeStep> steps = new ArrayList<>();
         for (int i = 0; i < stepsContainer.getChildCount(); i++) {
             View stepView = stepsContainer.getChildAt(i);
             TextInputEditText etStep = stepView.findViewById(R.id.etStep);
             String stepText = etStep.getText().toString().trim();
-
             if (stepText.isEmpty()) {
                 Toast.makeText(this, R.string.create_recipe_error_empty_fields, Toast.LENGTH_SHORT).show();
                 return;
             }
-
             RecipeStep step = new RecipeStep();
             step.setOrder(i + 1);
             step.setDescription(stepText);
             steps.add(step);
         }
 
-        // Obtener ingredientes
         List<RecipeIngredient> ingredients = new ArrayList<>();
         for (int i = 0; i < ingredientsContainer.getChildCount(); i++) {
             View ingredientView = ingredientsContainer.getChildAt(i);
             TextInputEditText etName = ingredientView.findViewById(R.id.etIngredientName);
             TextInputEditText etQuantity = ingredientView.findViewById(R.id.etQuantity);
             AutoCompleteTextView spinnerUnit = ingredientView.findViewById(R.id.spinnerUnit);
-
             String name = etName.getText().toString().trim();
             String quantity = etQuantity.getText().toString().trim();
             String unit = spinnerUnit.getText().toString().trim();
-
             if (name.isEmpty() || quantity.isEmpty() || unit.isEmpty()) {
                 Toast.makeText(this, R.string.create_recipe_error_empty_fields, Toast.LENGTH_SHORT).show();
                 return;
             }
-
             RecipeIngredient ingredient = new RecipeIngredient(name, quantity, unit);
             ingredients.add(ingredient);
         }
 
-        // Crear request
         CreateRecipeRequest request = new CreateRecipeRequest(title, description, ingredients, steps, imageBase64);
 
-        // Enviar al backend
         showLoading(true);
         Call<RecipeDetail> call = isEditMode
-            ? recipeService.updateRecipe(recipeId, request)
-            : recipeService.createRecipe(request);
+                ? recipeService.updateRecipe(recipeId, request)
+                : recipeService.createRecipe(request);
 
         call.enqueue(new Callback<RecipeDetail>() {
             @Override
@@ -297,17 +321,16 @@ public class CreateRecipeActivity extends AppCompatActivity {
                     int messageRes = isEditMode ? R.string.edit_recipe_success : R.string.create_recipe_success;
                     Toast.makeText(CreateRecipeActivity.this, messageRes, Toast.LENGTH_SHORT).show();
 
-                    // Loguear evento de creación o edición
                     if (isEditMode) {
                         AnalyticsHelper.logEditRecipe(CreateRecipeActivity.this, recipe.getId(), recipe.getTitle());
                     } else {
                         int ingredientsCount = recipe.getIngredients() != null ? recipe.getIngredients().size() : 0;
                         int stepsCount = recipe.getSteps() != null ? recipe.getSteps().size() : 0;
                         AnalyticsHelper.logCreateRecipe(CreateRecipeActivity.this, recipe.getId(),
-                            recipe.getTitle(), ingredientsCount, stepsCount);
+                                recipe.getTitle(), ingredientsCount, stepsCount);
                     }
 
-                    setResult(RESULT_OK); // Notificar que hubo cambios
+                    setResult(RESULT_OK);
                     finish();
                 } else {
                     int errorRes = isEditMode ? R.string.edit_recipe_error : R.string.create_recipe_error;
@@ -331,7 +354,6 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
     private void loadRecipeForEdit() {
         showLoading(true);
-
         recipeService.getRecipeDetail(recipeId).enqueue(new Callback<RecipeDetail>() {
             @Override
             public void onResponse(Call<RecipeDetail> call, Response<RecipeDetail> response) {
@@ -355,68 +377,64 @@ public class CreateRecipeActivity extends AppCompatActivity {
     }
 
     private void populateFields(RecipeDetail recipe) {
-        // Título y descripción
         etRecipeName.setText(recipe.getTitle());
         etDescription.setText(recipe.getDescription());
-
-        // Imagen
         if (recipe.getImageUrl() != null && !recipe.getImageUrl().isEmpty()) {
             imageBase64 = recipe.getImageUrl();
-            // Cargar imagen con Glide
             com.bumptech.glide.Glide.with(this)
-                .load(recipe.getImageUrl())
-                .into(ivRecipePreview);
+                    .load(recipe.getImageUrl())
+                    .into(ivRecipePreview);
             ivRecipePreview.setVisibility(View.VISIBLE);
         }
 
-        // Pasos
         if (recipe.getSteps() != null) {
+            stepsContainer.removeAllViews();
             for (RecipeStep step : recipe.getSteps()) {
-                View stepView = LayoutInflater.from(this).inflate(R.layout.item_step_input, stepsContainer, false);
-                TextInputEditText etStep = stepView.findViewById(R.id.etStep);
-                etStep.setText(step.getDescription());
-
-                MaterialButton btnRemove = stepView.findViewById(R.id.btnRemoveStep);
-                btnRemove.setOnClickListener(v -> {
-                    if (stepsContainer.getChildCount() > 1) {
-                        stepsContainer.removeView(stepView);
-                    } else {
-                        Toast.makeText(CreateRecipeActivity.this, R.string.create_recipe_error_empty_steps, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                stepsContainer.addView(stepView);
+                addStepInputWithText(step.getDescription());
             }
         }
 
-        // Ingredientes
         if (recipe.getIngredients() != null) {
+            ingredientsContainer.removeAllViews();
             for (RecipeIngredient ingredient : recipe.getIngredients()) {
-                View ingredientView = LayoutInflater.from(this).inflate(R.layout.item_ingredient_input, ingredientsContainer, false);
-                TextInputEditText etName = ingredientView.findViewById(R.id.etIngredientName);
-                TextInputEditText etQuantity = ingredientView.findViewById(R.id.etQuantity);
-                AutoCompleteTextView spinnerUnit = ingredientView.findViewById(R.id.spinnerUnit);
-
-                etName.setText(ingredient.getName());
-                etQuantity.setText(ingredient.getQuantity());
-
-                // Configurar spinner
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, units);
-                spinnerUnit.setAdapter(adapter);
-                spinnerUnit.setText(ingredient.getUnit(), false);
-
-                MaterialButton btnRemove = ingredientView.findViewById(R.id.btnRemoveIngredient);
-                btnRemove.setOnClickListener(v -> {
-                    if (ingredientsContainer.getChildCount() > 1) {
-                        ingredientsContainer.removeView(ingredientView);
-                    } else {
-                        Toast.makeText(CreateRecipeActivity.this, R.string.create_recipe_error_empty_ingredients, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                ingredientsContainer.addView(ingredientView);
+                addIngredientInputWithData(ingredient.getName(), ingredient.getQuantity(), ingredient.getUnit());
             }
         }
     }
-}
 
+    private void addStepInputWithText(String text) {
+        View stepView = LayoutInflater.from(this).inflate(R.layout.item_step_input, stepsContainer, false);
+        TextInputEditText etStep = stepView.findViewById(R.id.etStep);
+        etStep.setText(text);
+        MaterialButton btnRemove = stepView.findViewById(R.id.btnRemoveStep);
+        btnRemove.setOnClickListener(v -> {
+            if (stepsContainer.getChildCount() > 1) {
+                stepsContainer.removeView(stepView);
+            } else {
+                Toast.makeText(this, R.string.create_recipe_error_empty_steps, Toast.LENGTH_SHORT).show();
+            }
+        });
+        stepsContainer.addView(stepView);
+    }
+
+    private void addIngredientInputWithData(String name, String quantity, String unit) {
+        View ingredientView = LayoutInflater.from(this).inflate(R.layout.item_ingredient_input, ingredientsContainer, false);
+        TextInputEditText etName = ingredientView.findViewById(R.id.etIngredientName);
+        TextInputEditText etQuantity = ingredientView.findViewById(R.id.etQuantity);
+        AutoCompleteTextView spinnerUnit = ingredientView.findViewById(R.id.spinnerUnit);
+        etName.setText(name);
+        etQuantity.setText(quantity);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, units);
+        spinnerUnit.setAdapter(adapter);
+        spinnerUnit.setText(unit, false);
+        MaterialButton btnRemove = ingredientView.findViewById(R.id.btnRemoveIngredient);
+        btnRemove.setOnClickListener(v -> {
+            if (ingredientsContainer.getChildCount() > 1) {
+                ingredientsContainer.removeView(ingredientView);
+            } else {
+                Toast.makeText(this, R.string.create_recipe_error_empty_ingredients, Toast.LENGTH_SHORT).show();
+            }
+        });
+        ingredientsContainer.addView(ingredientView);
+    }
+}

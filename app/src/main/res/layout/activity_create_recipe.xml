@@ -94,6 +94,14 @@
                 android:text="@string/create_recipe_steps_label"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:textColor="?attr/colorOnSurface"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/create_recipe_voice_steps_instruction"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:layout_marginBottom="8dp" />
 
             <LinearLayout
@@ -103,21 +111,36 @@
                 android:orientation="vertical"
                 android:layout_marginBottom="8dp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAddStep"
-                style="@style/Widget.Material3.Button.IconButton.Filled"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="center"
-                app:icon="@drawable/ic_add_24"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
-                android:contentDescription="@string/create_recipe_add_step"
-                android:layout_marginBottom="16dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAddStep"
+                    style="@style/Widget.Material3.Button.IconButton.Filled"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    app:icon="@drawable/ic_add_24"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    android:contentDescription="@string/create_recipe_add_step" />
+
+                <ImageButton
+                    android:id="@+id/btnVoiceInputSteps"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@android:drawable/ic_btn_speak_now"
+                    android:contentDescription="@string/create_recipe_add_step_voice"
+                    android:layout_marginStart="16dp" />
+
+            </LinearLayout>
 
             <!-- Separador -->
             <View
@@ -155,8 +178,7 @@
                 android:insetTop="0dp"
                 android:insetRight="0dp"
                 android:insetBottom="0dp"
-                android:contentDescription="@string/create_recipe_add_ingredient"
-                android:layout_marginBottom="16dp" />
+                android:contentDescription="@string/create_recipe_add_ingredient" />
 
         </LinearLayout>
 
@@ -188,4 +210,3 @@
     </FrameLayout>
 
 </RelativeLayout>
-

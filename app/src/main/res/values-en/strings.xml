@@ -121,11 +121,14 @@
     <string name="create_recipe_step_hint">Step</string>
     <string name="create_recipe_add_step">Add step</string>
     <string name="create_recipe_remove_step">Remove step</string>
+    <string name="create_recipe_add_step_voice">Add steps by voice</string>
+    <string name="create_recipe_voice_steps_instruction">(Dictate your steps and separate them with the word \"then\")</string>
     <string name="create_recipe_ingredients_label">Ingredients</string>
     <string name="create_recipe_ingredient_name_hint">ingredient</string>
     <string name="create_recipe_quantity_hint">quantity</string>
     <string name="create_recipe_unit_hint">ml</string>
     <string name="create_recipe_add_ingredient">Add ingredient</string>
+    <string name="create_recipe_add_ingredient_voice">Add ingredients by voice</string>
     <string name="create_recipe_remove_ingredient">Remove ingredient</string>
     <string name="create_recipe_save">Save</string>
     <string name="create_recipe_error_empty_fields">Please fill all fields</string>
@@ -137,6 +140,7 @@
     <string name="create_recipe_select_image_title">Select image</string>
     <string name="create_recipe_option_camera">Camera</string>
     <string name="create_recipe_option_gallery">Gallery</string>
+    <string name="voice_input_step_separator" translatable="false">then</string>
 
     <!-- Edit Recipe -->
     <string name="edit_recipe_title">Edit Recipe</string>

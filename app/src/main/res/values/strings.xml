@@ -120,11 +120,14 @@
     <string name="create_recipe_step_hint">Paso</string>
     <string name="create_recipe_add_step">Agregar paso</string>
     <string name="create_recipe_remove_step">Eliminar paso</string>
+    <string name="create_recipe_add_step_voice">Agregar pasos por voz</string>
+    <string name="create_recipe_voice_steps_instruction">(Dicta tus pasos y sepáralos con la palabra \"luego\")</string>
     <string name="create_recipe_ingredients_label">Ingredientes</string>
     <string name="create_recipe_ingredient_name_hint">ingrediente</string>
     <string name="create_recipe_quantity_hint">cantidad</string>
     <string name="create_recipe_unit_hint">ml</string>
     <string name="create_recipe_add_ingredient">Agregar ingrediente</string>
+    <string name="create_recipe_add_ingredient_voice">Agregar ingredientes por voz</string>
     <string name="create_recipe_remove_ingredient">Eliminar ingrediente</string>
     <string name="create_recipe_save">Guardar</string>
     <string name="create_recipe_error_empty_fields">Por favor completa todos los campos</string>
@@ -136,6 +139,7 @@
     <string name="create_recipe_select_image_title">Seleccionar imagen</string>
     <string name="create_recipe_option_camera">Cámara</string>
     <string name="create_recipe_option_gallery">Galería</string>
+    <string name="voice_input_step_separator" translatable="false">luego</string>
 
     <!-- Edit Recipe -->
     <string name="edit_recipe_title">Editar Receta</string>
