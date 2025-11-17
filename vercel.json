@@ -6,6 +6,6 @@
     }
   ],
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.py" }
+    { "source": "/api/recipes/transcribe-audio", "destination": "/api/index.py" }
   ]
 }
