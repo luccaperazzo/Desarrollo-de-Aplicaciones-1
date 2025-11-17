@@ -544,7 +544,8 @@ public class CreateRecipeActivity extends AppCompatActivity {
         );
 
         // Enviar al backend
-        Call<AudioStepsResponse> call = recipeService.transcribeAudio(audioPart);
+        RecipeService transcriptionService = RetrofitClient.getRetrofitInstanceForTranscription(this).create(RecipeService.class);
+        Call<AudioStepsResponse> call = transcriptionService.transcribeAudio(audioPart);
         call.enqueue(new Callback<AudioStepsResponse>() {
             @Override
             public void onResponse(Call<AudioStepsResponse> call, Response<AudioStepsResponse> response) {
