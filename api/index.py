@@ -6,22 +6,17 @@ import json
 
 # --- Configuración Segura ---
 try:
-    # Forma correcta: Leer la clave SIEMPRE desde las variables de entorno.
     api_key = os.environ.get("GOOGLE_API_KEY")
     if not api_key:
-        # Si la clave no está, lanzamos un error para que el servidor falle al iniciar.
-        # Esto es bueno, nos alerta de una mala configuración.
         raise ValueError("La variable de entorno GOOGLE_API_KEY no está configurada.")
     genai.configure(api_key=api_key)
     print("Google API Key configured successfully.")
 except Exception as e:
     print(f"Error crítico en la configuración de la API: {e}")
-    # Si hay un error aquí, es mejor que la app no inicie.
     raise e
 
 app = Flask(__name__)
 
-# --- Prompt (sin cambios) ---
 GEMINI_PROMPT = '''
 Eres un asistente culinario experto. Analiza el archivo de audio adjunto que contiene a una persona dictando los pasos de una receta.
 Tu tarea es convertir el discurso en una lista estructurada de pasos claros y concisos de la receta.
@@ -37,7 +32,8 @@ Si el audio dice “primero cortas una cebolla y luego la fríes en una sartén�
 }
 '''
 
-@app.route("/api/recipes/transcribe-audio", methods=["POST"])
+# CORREGIDO: La ruta ahora es la raíz. Vercel se encargará del enrutamiento público.
+@app.route("/", methods=["POST"])
 def transcribe_audio_route():
     if 'audio' not in request.files:
         return jsonify({"error": "No se encontró el archivo de audio"}), 400
@@ -59,7 +55,6 @@ def transcribe_audio_route():
         print(f"Archivo subido con éxito: {uploaded_file.name}")
 
         print("Generando contenido con Gemini...")
-        # CORREGIDO: Usar un nombre de modelo válido y eficiente.
         model = genai.GenerativeModel('models/gemini-1.5-flash-latest')
         
         response = model.generate_content(
@@ -91,6 +86,5 @@ def transcribe_audio_route():
             print(f"Eliminando archivo temporal: {temp_file_path}")
             os.unlink(temp_file_path)
 
-# Este bloque solo se ejecuta en local, Vercel lo ignora.
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

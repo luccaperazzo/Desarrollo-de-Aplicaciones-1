@@ -7,8 +7,8 @@
   ],
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index"
+      "source": "/api/recipes/transcribe-audio",
+      "destination": "/api/index.py"
     }
   ]
 }
