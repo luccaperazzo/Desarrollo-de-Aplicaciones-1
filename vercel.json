@@ -1,11 +1,1 @@
-{
-  "builds": [
-    {
-      "src": "api/index.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "rewrites": [
-    { "source": "/api/recipes/transcribe-audio", "destination": "/api/index.py" }
-  ]
-}
+{}

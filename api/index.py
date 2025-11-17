@@ -32,8 +32,8 @@ Si el audio dice “primero cortas una cebolla y luego la fríes en una sartén�
 }
 '''
 
-# CORRECCIÓN FINAL: La ruta es la raíz porque Vercel invoca la función en "/"
-@app.route("/", methods=["POST"])
+# CORRECCIÓN FINAL: Se restaura la ruta completa para que Flask la maneje.
+@app.route("/recipes/transcribe-audio", methods=["POST"])
 def transcribe_audio_route():
     if 'audio' not in request.files:
         return jsonify({"error": "No se encontró el archivo de audio"}), 400
