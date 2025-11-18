@@ -114,6 +114,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setupActivityResultLaunchers() {
+        // Launcher para la cámara
         cameraLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -124,6 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
         );
 
+        // Launcher para la galería
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -142,6 +144,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
         );
 
+        // Launcher para el permiso de la cámara
         requestCameraPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
@@ -153,6 +156,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
         );
 
+        // Launcher para el permiso de la galería
         requestGalleryPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
@@ -253,6 +257,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Cargar imagen de perfil si existe
         if (currentUser.getProfileImageUrl() != null && !currentUser.getProfileImageUrl().isEmpty()) {
+            // Carga la imagen de perfil usando Glide en 2do plano sin bloquear la UI
+            // mostrando un placeholder mientras.
             Glide.with(this)
                     .load(currentUser.getProfileImageUrl())
                     .placeholder(R.drawable.ic_person_large)
@@ -263,6 +269,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void showImagePickerDialog() {
+        // Muestra un dialog con las opciones de cámara y galería
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.create_recipe_select_image_title));
         String[] options = {
@@ -280,6 +287,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void checkCameraPermission() {
+        // Verifica si tenemos permiso de cámara
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA);
@@ -294,6 +302,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void checkGalleryPermission() {
+        // Verifica si tenemos permiso de galería
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -424,7 +433,7 @@ public class ProfileActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         btnSave.setEnabled(false);
 
-        // Preparar datos actualizados
+        // Prepara los datos actualizados
         String email = etEmail.getText().toString().trim();
         String username = etUsername.getText().toString().trim();
         String fullName = etFullName.getText().toString().trim();
@@ -435,6 +444,7 @@ public class ProfileActivity extends AppCompatActivity {
         UpdateUserRequest updateRequest = new UpdateUserRequest(email, username, fullName, profileImageUrl, password);
 
         Call<User> call = authService.updateUser(currentUser.getId(), updateRequest);
+        // Llama al endpoint de actualización de usuario
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {

@@ -61,6 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String selectedImageBase64 = null;
     private Uri cameraImageUri;
 
+    // Launcher para el permiso de la cámara
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
@@ -70,6 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             });
 
+    // Launcher para la cámara
     private final ActivityResultLauncher<Uri> cameraLauncher =
             registerForActivityResult(new ActivityResultContracts.TakePicture(), result -> {
                 if (result && cameraImageUri != null) {
@@ -77,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             });
 
+    // Launcher para la galería
     private final ActivityResultLauncher<String> galleryLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
                 if (uri != null) {

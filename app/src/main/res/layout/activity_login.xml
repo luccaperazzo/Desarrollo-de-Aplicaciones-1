@@ -29,7 +29,6 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
-            <!-- TODO: Reemplazar por logo -->
             <ImageView
                 android:id="@+id/logo"
                 android:layout_width="96dp"

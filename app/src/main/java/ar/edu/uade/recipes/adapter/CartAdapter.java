@@ -18,6 +18,7 @@ import java.util.List;
 import ar.edu.uade.recipes.R;
 import ar.edu.uade.recipes.model.CartItem;
 
+// Adapter para el RecyclerView de items del carrito
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
     private List<CartItem> items;

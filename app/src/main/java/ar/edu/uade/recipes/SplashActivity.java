@@ -11,6 +11,10 @@ import androidx.core.splashscreen.SplashScreen;
 
 import ar.edu.uade.recipes.util.UserManager;
 
+/**
+ * Activity inicial de la app. Si no se detecta un usuario logueado, avanza a la pantalla
+ * de login, y si lo hay, a la home.
+ */
 public class SplashActivity extends AppCompatActivity {
 
     private static final int SPLASH_TIME_OUT = 1000;
@@ -23,10 +27,12 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         new Handler().postDelayed(() -> {
+            // Verifica si el usuario ha completado el onboarding
             SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
             boolean onboardingCompleted = prefs.getBoolean("onboarding_completed", false);
 
             if (onboardingCompleted) {
+                // Si el usuario ha completado el onboarding, verifica si está logueado y redirige a la home o al login
                 UserManager userManager = new UserManager(SplashActivity.this);
                 if (userManager.isLoggedIn()) {
                     startActivity(new Intent(SplashActivity.this, HomeActivity.class));
@@ -41,6 +47,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void applyTheme() {
+        // Verificar si el usuario tiene un tema guardado en las preferencias para aplicarlo
         boolean isDarkMode = getSharedPreferences("settings", MODE_PRIVATE).getBoolean("dark_mode", false);
         if (isDarkMode) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);

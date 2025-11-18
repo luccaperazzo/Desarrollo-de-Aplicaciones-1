@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -110,12 +111,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
         userStar5 = findViewById(R.id.userStar5);
 
         // Inicializar contenedores de rating
-        avgRatingContainer = findViewById(R.id.avgRatingStarsContainer).getParent() instanceof LinearLayout
-            ? (LinearLayout) ((LinearLayout) findViewById(R.id.avgRatingStarsContainer).getParent()).getParent()
-            : null;
-        userRatingContainer = findViewById(R.id.userRatingStarsContainer).getParent() instanceof LinearLayout
-            ? (LinearLayout) findViewById(R.id.userRatingStarsContainer).getParent()
-            : null;
+        ViewParent avgRatingParent = findViewById(R.id.avgRatingStarsContainer).getParent();
+        avgRatingContainer = (LinearLayout) avgRatingParent.getParent();
+        userRatingContainer = (LinearLayout) findViewById(R.id.userRatingStarsContainer).getParent();
 
         // Configurar toolbar
         setSupportActionBar(toolbar);
@@ -475,6 +473,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // Si es receta propia, muestra el menú de edición y borrado en la toolbar
         if (currentRecipe != null && currentRecipe.isOwner()) {
             getMenuInflater().inflate(R.menu.menu_recipe_detail, menu);
             return true;

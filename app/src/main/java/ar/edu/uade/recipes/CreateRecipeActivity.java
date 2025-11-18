@@ -41,6 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Activity para crear y editar recetas
 public class CreateRecipeActivity extends AppCompatActivity {
 
     public static final String EXTRA_RECIPE_ID = "recipe_id";
@@ -79,10 +80,11 @@ public class CreateRecipeActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Crea la instancia del servicio de recetas
         recipeService = RetrofitClient.getRetrofitInstance(this).create(RecipeService.class);
         units = getResources().getStringArray(R.array.units_array);
 
-        // Obtener datos del intent
+        // Obtiene los datos del intent
         recipeId = getIntent().getStringExtra(EXTRA_RECIPE_ID);
         isEditMode = getIntent().getBooleanExtra(EXTRA_IS_EDIT_MODE, false);
 
@@ -120,6 +122,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
     }
 
     private void setupActivityResultLaunchers() {
+        // Launcher para la cámara
         cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -131,6 +134,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
             }
         );
 
+        // Launcher para la galería
         galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -177,9 +181,11 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
     private void processImage(Bitmap bitmap) {
         try {
+            // Redimensiona la imagen para que no sea demasiado grande
             Bitmap resizedBitmap = ImageHelper.resizeBitmap(bitmap, 800);
             imageBase64 = ImageHelper.bitmapToBase64(resizedBitmap);
 
+            // Muestra la imagen en el ImageView
             ivRecipePreview.setImageBitmap(resizedBitmap);
             ivRecipePreview.setVisibility(View.VISIBLE);
         } catch (Exception e) {

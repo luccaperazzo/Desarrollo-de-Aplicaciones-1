@@ -38,7 +38,7 @@
         app:layout_constraintBottom_toTopOf="@id/nextButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-        <!-- Indicators will be added here dynamically -->
+        <!-- Indicadores se agregarán dinámicamente aquí -->
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton

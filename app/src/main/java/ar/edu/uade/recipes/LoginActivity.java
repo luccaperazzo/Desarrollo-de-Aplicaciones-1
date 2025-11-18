@@ -35,8 +35,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-// TODO: agregar logo en la vista
-
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText etEmail, etPassword;

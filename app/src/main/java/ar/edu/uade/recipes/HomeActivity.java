@@ -115,6 +115,7 @@ public class HomeActivity extends AppCompatActivity {
             favoritesFragment = new FavoritesFragment();
 
             // Agregar todos los fragments al inicio
+            // Se utiliza el getSupportFragmentManager para la gestión de fragments de la actividad
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragmentContainer, exploreFragment, "explore")

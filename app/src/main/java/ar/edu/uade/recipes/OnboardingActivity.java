@@ -17,7 +17,9 @@ import ar.edu.uade.recipes.fragment.OnboardingPageFragment;
 
 public class OnboardingActivity extends AppCompatActivity {
 
+    // Componente de Android que permite crear vistas deslizables
     private ViewPager2 viewPager;
+    // Adaptador para manejar los fragmentos de la vista deslizante
     private OnboardingAdapter adapter;
     private LinearLayout indicatorLayout;
     private Button nextButton, backButton, skipButton;
@@ -38,6 +40,7 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     private void setupViewPager() {
+        // Carga los fragmens al adapter
         adapter = new OnboardingAdapter(this);
         adapter.addFragment(OnboardingPageFragment.newInstance(getString(R.string.onboarding_page1_title), getString(R.string.onboarding_page1_description), R.drawable.groceries));
         adapter.addFragment(OnboardingPageFragment.newInstance(getString(R.string.onboarding_page2_title), getString(R.string.onboarding_page2_description), R.drawable.recipes));
@@ -50,6 +53,7 @@ public class OnboardingActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                // Actualiza los indicadores y la visibilidad de los botones
                 updateIndicators(position);
                 updateButtonVisibility(position);
             }
@@ -108,13 +112,13 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     private void finishOnboarding() {
-        // Mark onboarding as completed
+        // Marca el onboarding como completado
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("onboarding_completed", true);
         editor.apply();
 
-        // Navigate to the main part of the app
+        // Navega al login
         startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
