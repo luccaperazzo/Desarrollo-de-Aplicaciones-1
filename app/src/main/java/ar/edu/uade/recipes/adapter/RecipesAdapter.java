@@ -1,5 +1,7 @@
 package ar.edu.uade.recipes.adapter;
 
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,14 +125,30 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             tvRecipeTitle.setText(recipe.getTitle());
             tvRecipeAuthor.setText(itemView.getContext().getString(R.string.recipe_author_prefix, recipe.getAuthorName()));
 
-            // Cargar imagen con Glide
-            if (recipe.getImageUrl() != null && !recipe.getImageUrl().isEmpty()) {
-                Glide.with(itemView.getContext())
-                        .load(recipe.getImageUrl())
-                        .placeholder(R.drawable.ic_launcher_background)
-                        .error(R.drawable.ic_launcher_background)
-                        .centerCrop()
-                        .into(ivRecipeImage);
+            String imageUrl = recipe.getImageUrl();
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                if (imageUrl.startsWith("http")) {
+                    Glide.with(itemView.getContext())
+                            .load(imageUrl)
+                            .placeholder(R.drawable.ic_launcher_background)
+                            .error(R.drawable.ic_launcher_background)
+                            .centerCrop()
+                            .into(ivRecipeImage);
+                } else {
+                    try {
+                        byte[] imageBytes = Base64.decode(imageUrl, Base64.DEFAULT);
+                        Glide.with(itemView.getContext())
+                                .asBitmap()
+                                .load(imageBytes)
+                                .placeholder(R.drawable.ic_launcher_background)
+                                .error(R.drawable.ic_launcher_background)
+                                .centerCrop()
+                                .into(ivRecipeImage);
+                    } catch (Exception e) {
+                        ivRecipeImage.setImageResource(R.drawable.ic_launcher_background);
+                        Log.e("RecipesAdapter", "Error decodificando imagen Base64", e);
+                    }
+                }
             } else {
                 ivRecipeImage.setImageResource(R.drawable.ic_launcher_background);
             }

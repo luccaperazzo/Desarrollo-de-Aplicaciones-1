@@ -17,7 +17,8 @@ public class RetrofitClient {
     private static Retrofit retrofit;
     private static Retrofit retrofitTranscription;
     private static final String BASE_URL = "https://tpo-desappi.vercel.app/";
-    private static final String TRANSCRIPTION_URL = "https://flask-xi-liard.vercel.app/";
+    // Apuntar la transcripción a la misma URL base
+    private static final String TRANSCRIPTION_URL = "https://tpo-desappi.vercel.app/";
     private static OkHttpClient client;
 
     private static OkHttpClient getClient(Context context) {
