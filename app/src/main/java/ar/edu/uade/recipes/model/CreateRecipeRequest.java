@@ -12,17 +12,17 @@ public class CreateRecipeRequest {
     @SerializedName("is_public")
     private boolean isPublic;
 
-    @SerializedName("image_url")
-    private String imageUrl;
+    @SerializedName("image_base64")
+    private String imageBase64;
 
     public CreateRecipeRequest(String title, String description, List<RecipeIngredient> ingredients,
-                               List<RecipeStep> steps, String imageUrl) {
+                               List<RecipeStep> steps, String imageBase64) {
         this.title = title;
         this.description = description;
         this.ingredients = ingredients;
         this.steps = steps;
         this.isPublic = true; // Siempre true
-        this.imageUrl = imageUrl;
+        this.imageBase64 = imageBase64;
     }
 
     public String getTitle() {
@@ -65,12 +65,12 @@ public class CreateRecipeRequest {
         isPublic = aPublic;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageBase64() {
+        return imageBase64;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
     }
 }
 
