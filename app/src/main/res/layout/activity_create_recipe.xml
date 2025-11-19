@@ -126,6 +126,7 @@
                     android:contentDescription="@string/create_recipe_add_step"
                     android:layout_marginEnd="8dp" />
 
+                <!--
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRecordAudio"
                     style="@style/Widget.Material3.Button.OutlinedButton"
@@ -135,6 +136,7 @@
                     app:icon="@drawable/ic_mic_24"
                     app:iconGravity="textStart"
                     android:layout_marginStart="8dp" />
+                -->
 
             </LinearLayout>
 
@@ -207,4 +209,3 @@
     </FrameLayout>
 
 </RelativeLayout>
-

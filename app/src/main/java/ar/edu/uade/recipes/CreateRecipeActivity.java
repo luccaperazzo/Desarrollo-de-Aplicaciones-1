@@ -131,7 +131,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
         ingredientsContainer = findViewById(R.id.ingredientsContainer);
         btnAddStep = findViewById(R.id.btnAddStep);
         btnAddIngredient = findViewById(R.id.btnAddIngredient);
-        btnRecordAudio = findViewById(R.id.btnRecordAudio);
+        // btnRecordAudio = findViewById(R.id.btnRecordAudio);
         btnSave = findViewById(R.id.btnSave);
         loadingOverlay = findViewById(R.id.loadingOverlay);
 
@@ -173,7 +173,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
         btnUploadImage.setOnClickListener(v -> showImagePickerDialog());
         btnAddStep.setOnClickListener(v -> addStepInput());
         btnAddIngredient.setOnClickListener(v -> addIngredientInput());
-        btnRecordAudio.setOnClickListener(v -> handleAudioRecording());
+        // btnRecordAudio.setOnClickListener(v -> handleAudioRecording());
         btnSave.setOnClickListener(v -> saveRecipe());
     }
 
@@ -634,4 +634,3 @@ public class CreateRecipeActivity extends AppCompatActivity {
         }
     }
 }
-
