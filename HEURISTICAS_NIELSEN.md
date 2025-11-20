@@ -1,4 +1,4 @@
-# Heurísticas de Nielsen Implementadas en Ccookly
+# Heurísticas de Nielsen Implementadas en Cookly
 
 Este documento lista las heurísticas de usabilidad de Jakob Nielsen que están implementadas en la aplicación Cookly
 
@@ -205,7 +205,7 @@ Este documento lista las heurísticas de usabilidad de Jakob Nielsen que están 
 **Principio**: Aunque es mejor si el sistema se puede usar sin documentación, puede ser necesario proporcionar ayuda y documentación.
 
 **Se cumple en**:
-- Se encuentra pendiente la realización de un tutorial al momento de abrir por primera vez la app
+- Se encuentra la realización de un onboarding al momento de abrir por primera vez la app
 
 
 |                                                           Onboarding 1                                                           |                                                      Onboarding 2                                                       |                                                       Onboarding 3                                                       |
@@ -213,7 +213,7 @@ Este documento lista las heurísticas de usabilidad de Jakob Nielsen que están 
 | ![Pantalla principal](C:\Users\lucca\AndroidStudioProjects\Desarrollo-de-Aplicaciones-1\nielsen-evidence\nielsen-evidence13.jpg) | ![asfssf](C:\Users\lucca\AndroidStudioProjects\Desarrollo-de-Aplicaciones-1\nielsen-evidence\nielsen-evidence12jpg.jpg) | ![Detalle](C:\Users\lucca\AndroidStudioProjects\Desarrollo-de-Aplicaciones-1\nielsen-evidence\nielsen-evidence11jpg.jpg) |
 
 
-(El onboarding funciona como la principal herramienta de **ayuda y documentación**, presentando las características clave de la aplicación de una manera fácil de digerir para un nuevo usuario, sin que este tenga que buscar activamente un menú de ayuda.)
+(El onboarding cumple la heurística 10 de Nielsen porque funciona como un mecanismo de ayuda integrado en la interfaz, proporcionando explicaciones claras, breves y contextuales sobre cómo usar la app, sin requerir documentación externa y facilitando el aprendizaje de un usuario nuevo.)
 
 
 ---
@@ -231,7 +231,7 @@ Este documento lista las heurísticas de usabilidad de Jakob Nielsen que están 
 | 7. Flexibilidad y Eficiencia de Uso | ✅ Implementada |
 | 8. Diseño Estético y Minimalista | ✅ Implementada |
 | 9. Recuperación de Errores | ✅ Implementada |
-| 10. Ayuda y Documentación | ❌ Penidente |
+| 10. Ayuda y Documentación | ✅ Implementada |
 
 
 ---
@@ -292,13 +292,13 @@ Se diseñó el siguiente guion para validar las hipótesis sobre las necesidades
 
 - **Objetivo del Usuario**: Guardar y compartir una nueva creación culinaria para que otros la vean y califiquen.
 
-| Fase | Acciones del Usuario | Pensamientos y Sentimientos                                                                         | Oportunidades para Cookly |
-| :--- | :--- |:----------------------------------------------------------------------------------------------------| :--- |
-| **Inspiración** | Acaba de crear un postre increíble. Le saca una buena foto. | "¡Esto me quedó genial! Tengo que guardarlo en algún sitio para no olvidarme. Debería compartirlo." | Ser la app de referencia para guardar creaciones personales. |
-| **Creación** | Abre Cookly, va a "Mis Recetas" y toca el botón "+". | "Ok, vamos a ver si es fácil."                                                                      | Un botón de "Crear" (FAB) prominente y de fácil acceso. |
+| Fase | Acciones del Usuario                                                                                                                             | Pensamientos y Sentimientos                                                                         | Oportunidades para Cookly |
+| :--- |:-------------------------------------------------------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------| :--- |
+| **Inspiración** | Acaba de crear un postre increíble. Le saca una buena foto.                                                                                      | "¡Esto me quedó genial! Tengo que guardarlo en algún sitio para no olvidarme. Debería compartirlo." | Ser la app de referencia para guardar creaciones personales. |
+| **Creación** | Abre Cookly, va a "Mis Recetas" y toca el botón "+".                                                                                             | "Ok, vamos a ver si es fácil."                                                                      | Un botón de "Crear" (FAB) prominente y de fácil acceso. |
 | **Completar Formulario** | 1. Sube la foto. <br> 2. Escribe el nombre. <br> 3. Escribe la descripción. <br> 4. Añade los ingredientes uno por uno. <br> 5. Añade los pasos. | "Uf, son muchos ingredientes. Escribir todo esto es un poco lento."                               | **Implementar la entrada de ingredientes por voz (IA)**. Ofrecer autocompletado para unidades e ingredientes comunes. |
-| **Publicación** | Revisa que todo esté bien y presiona "Guardar y Publicar". | "Espero que se vea tan bien como en la foto."                                                       | Mostrar un preview de cómo se verá la receta. Dar feedback instantáneo de que se guardó correctamente. |
-| **Validación Social** | Entra a su perfil para ver su nueva receta. Comparte el enlace. Vuelve más tarde para ver comentarios. | "¡Me encanta cómo se ve! A ver si a alguien le gusta. ¡Ya tengo un like!"                           | Permitir compartir fácilmente en redes sociales. Implementar un sistema de notificaciones para likes y comentarios. |
+| **Publicación** | Revisa que todo esté bien y presiona "Guardar".                                                                                                  | "Espero que se vea tan bien como en la foto."                                                       | Mostrar un preview de cómo se verá la receta. Dar feedback instantáneo de que se guardó correctamente. |
+| **Validación Social** | Entra a su perfil para ver su nueva receta.                                                                                                      | "¡Me encanta cómo se ve! A ver si a alguien le gusta. ¡Ya tengo un like!"                           | Permitir compartir fácilmente en redes sociales. Implementar un sistema de notificaciones para likes y comentarios. |
 
 
 ---
@@ -311,8 +311,6 @@ La investigación de usuarios validó varias de nuestras hipótesis iniciales y 
 
 2.  **Dos Perfiles, Dos Necesidades**: La app debía servir tanto para el consumo pasivo de recetas (Martín) como para la creación activa (Sofía). Esto justificó la separación entre las pestañas **Explorar** y **Mis Recetas**, y la importancia del flujo de **Crear Receta**.
 
-3.  **Dolor en la Entrada de Datos**: El User Journey de Sofía reveló que la entrada manual de muchos ingredientes es un punto de fricción. Esto generó y priorizó la idea de implementar **una funcionalidad de transcripción de ingredientes por voz (IA)** como un factor diferencial y un acelerador de uso (Heurística #7).
+3. **Componente Social**: El deseo de Sofía de compartir y recibir feedback validó la necesidad de un **calificaciones (estrellas)**, convirtiendo a Cookly en más que un simple recetario.
 
-4.  **Componente Social**: El deseo de Sofía de compartir y recibir feedback validó la necesidad de un **sistema de perfiles públicos, calificaciones (estrellas) y comentarios**, convirtiendo a Cookly en más que un simple recetario.
-
-5.  **Acceso Offline**: La frustración de perder una receta por mala conexión (un problema común en la cocina) confirmó que una **funcionalidad offline robusta con caché de datos** era un requisito no funcional crítico para una buena experiencia de usuario.
+4. **Acceso Offline**: La frustración de perder una receta por mala conexión (un problema común en la cocina) confirmó que una **funcionalidad offline robusta con caché de datos** era un requisito no funcional crítico para una buena experiencia de usuario.

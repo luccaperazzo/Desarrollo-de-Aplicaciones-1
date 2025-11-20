@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -419,36 +420,22 @@ public class RegisterActivity extends AppCompatActivity {
         validateForButtonEnable();
     }
 
+    private void togglePasswordVisibility(TextInputEditText editText) {
+        int selection = editText.getSelectionEnd();
+        if (editText.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        } else {
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
+        editText.setSelection(selection);
+    }
+
     /**
-     * MAneja la visibilidad de las contraseñas entre ambos campos
+     * Configura los listeners para los íconos de visibilidad de contraseña.
      */
     private void handlePasswordVisibility() {
-        // Listener unificado para ambos campos
-        View.OnClickListener togglePasswordVisibility = v -> {
-            // Obtener el estado actual (cualquiera de los dos campos sirve)
-            boolean isPasswordVisible = (etPass.getInputType() & android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) != 0;
-
-            // Determinar el nuevo tipo de input
-            int newInputType = isPasswordVisible
-                ? android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
-                : android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
-
-            // Aplicar a ambos campos
-            etPass.setInputType(newInputType);
-            etConfirm.setInputType(newInputType);
-
-            // Mantener el cursor al final del texto en ambos campos
-            etPass.setSelection(etPass.getText() != null ? etPass.getText().length() : 0);
-            etConfirm.setSelection(etConfirm.getText() != null ? etConfirm.getText().length() : 0);
-
-            // Actualizar ambos íconos
-            tilPass.refreshEndIconDrawableState();
-            tilConfirm.refreshEndIconDrawableState();
-        };
-
-        // Asignar el mismo listener a ambos campos
-        tilPass.setEndIconOnClickListener(togglePasswordVisibility);
-        tilConfirm.setEndIconOnClickListener(togglePasswordVisibility);
+        tilPass.setEndIconOnClickListener(v -> togglePasswordVisibility(etPass));
+        tilConfirm.setEndIconOnClickListener(v -> togglePasswordVisibility(etConfirm));
     }
 
     private String getTextOf(TextInputEditText et) {
