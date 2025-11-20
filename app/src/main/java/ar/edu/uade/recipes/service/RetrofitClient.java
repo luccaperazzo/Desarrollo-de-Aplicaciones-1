@@ -21,7 +21,7 @@ public class RetrofitClient {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(message -> {
                 Log.d("Retrofit", message);
             });
-            // Mostrar logs completos (cambiar a NONE en producción)
+            // Mostrar logs completos
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
             OkHttpClient client = new OkHttpClient.Builder()
