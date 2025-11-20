@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -327,14 +329,29 @@ public class HomeActivity extends AppCompatActivity {
         if (user != null) {
             tvUserName.setText(getString(R.string.drawer_hello, user.getFullName()));
 
-            // Cargar imagen de perfil si existe
-            if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
+            String imageUrl = user.getProfileImageUrl();
+            if (imageUrl != null && !imageUrl.isEmpty()) {
                 ivUserProfile.setImageTintList(null);
-                Glide.with(this)
-                    .load(user.getProfileImageUrl())
-                    .circleCrop()
-                    .placeholder(R.drawable.ic_person_24)
-                    .into(ivUserProfile);
+                if (imageUrl.startsWith("http")) {
+                    Glide.with(this)
+                        .load(imageUrl)
+                        .circleCrop()
+                        .placeholder(R.drawable.ic_person_24)
+                        .into(ivUserProfile);
+                } else {
+                    try {
+                        byte[] imageBytes = Base64.decode(imageUrl, Base64.DEFAULT);
+                        Glide.with(this)
+                            .asBitmap()
+                            .load(imageBytes)
+                            .circleCrop()
+                            .placeholder(R.drawable.ic_person_24)
+                            .into(ivUserProfile);
+                    } catch (Exception e) {
+                        ivUserProfile.setImageResource(R.drawable.ic_person_24);
+                        Log.e("HomeActivity", "Error decodificando imagen Base64", e);
+                    }
+                }
             } else {
                 ivUserProfile.setImageResource(R.drawable.ic_person_24);
             }
