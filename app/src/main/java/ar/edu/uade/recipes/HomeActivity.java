@@ -332,26 +332,17 @@ public class HomeActivity extends AppCompatActivity {
             // Cargar imagen de perfil si existe
             if (imageUrl != null && !imageUrl.isEmpty()) {
                 ivUserProfile.setImageTintList(null);
-                // Comprobar si es una URL o un string Base64
-                if (imageUrl.startsWith("http")) {
+                try {
+                    byte[] imageBytes = Base64.decode(imageUrl, Base64.DEFAULT);
                     Glide.with(this)
-                            .load(imageUrl)
+                            .asBitmap()
+                            .load(imageBytes)
                             .circleCrop()
                             .placeholder(R.drawable.ic_person_24)
                             .into(ivUserProfile);
-                } else {
-                    try {
-                        byte[] imageBytes = Base64.decode(imageUrl, Base64.DEFAULT);
-                        Glide.with(this)
-                                .asBitmap()
-                                .load(imageBytes)
-                                .circleCrop()
-                                .placeholder(R.drawable.ic_person_24)
-                                .into(ivUserProfile);
-                    } catch (Exception e) {
-                        ivUserProfile.setImageResource(R.drawable.ic_person_24);
-                        Log.e("HomeActivity", "Error decodificando imagen Base64", e);
-                    }
+                } catch (Exception e) {
+                    ivUserProfile.setImageResource(R.drawable.ic_person_24);
+                    Log.e("HomeActivity", "Error decodificando imagen Base64", e);
                 }
             } else {
                 ivUserProfile.setImageResource(R.drawable.ic_person_24);

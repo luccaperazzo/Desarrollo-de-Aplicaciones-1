@@ -127,27 +127,18 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             String imageUrl = recipe.getImageUrl();
             if (imageUrl != null && !imageUrl.isEmpty()) {
-                if (imageUrl.startsWith("http")) {
+                try {
+                    byte[] imageBytes = Base64.decode(imageUrl, Base64.DEFAULT);
                     Glide.with(itemView.getContext())
-                            .load(imageUrl)
+                            .asBitmap()
+                            .load(imageBytes)
                             .placeholder(R.drawable.ic_launcher_background)
                             .error(R.drawable.ic_launcher_background)
                             .centerCrop()
                             .into(ivRecipeImage);
-                } else {
-                    try {
-                        byte[] imageBytes = Base64.decode(imageUrl, Base64.DEFAULT);
-                        Glide.with(itemView.getContext())
-                                .asBitmap()
-                                .load(imageBytes)
-                                .placeholder(R.drawable.ic_launcher_background)
-                                .error(R.drawable.ic_launcher_background)
-                                .centerCrop()
-                                .into(ivRecipeImage);
-                    } catch (Exception e) {
-                        ivRecipeImage.setImageResource(R.drawable.ic_launcher_background);
-                        Log.e("RecipesAdapter", "Error decodificando imagen Base64", e);
-                    }
+                } catch (Exception e) {
+                    ivRecipeImage.setImageResource(R.drawable.ic_launcher_background);
+                    Log.e("RecipesAdapter", "Error decodificando imagen Base64", e);
                 }
             } else {
                 ivRecipeImage.setImageResource(R.drawable.ic_launcher_background);

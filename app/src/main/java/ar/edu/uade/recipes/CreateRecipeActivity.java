@@ -4,9 +4,11 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -396,11 +398,14 @@ public class CreateRecipeActivity extends AppCompatActivity {
         // Imagen
         if (recipe.getImageUrl() != null && !recipe.getImageUrl().isEmpty()) {
             imageBase64 = recipe.getImageUrl();
-            // Cargar imagen con Glide
-            com.bumptech.glide.Glide.with(this)
-                .load(recipe.getImageUrl())
-                .into(ivRecipePreview);
-            ivRecipePreview.setVisibility(View.VISIBLE);
+            try {
+                byte[] imageBytes = Base64.decode(recipe.getImageUrl(), Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                ivRecipePreview.setImageBitmap(bitmap);
+                ivRecipePreview.setVisibility(View.VISIBLE);
+            } catch (Exception e) {
+                ivRecipePreview.setVisibility(View.GONE);
+            }
         }
 
         // Pasos
