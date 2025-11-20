@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -255,14 +256,26 @@ public class ProfileActivity extends AppCompatActivity {
         etUsername.setText(currentUser.getUsername());
         etFullName.setText(currentUser.getFullName());
 
-        // Cargar imagen de perfil si existe
-        if (currentUser.getProfileImageUrl() != null && !currentUser.getProfileImageUrl().isEmpty()) {
-            // Carga la imagen de perfil usando Glide en 2do plano sin bloquear la UI
-            // mostrando un placeholder mientras.
-            Glide.with(this)
-                    .load(currentUser.getProfileImageUrl())
-                    .placeholder(R.drawable.ic_person_large)
-                    .into(ivProfileImage);
+        String imageUrl = currentUser.getProfileImageUrl();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            if (imageUrl.startsWith("http")) {
+                Glide.with(this)
+                        .load(imageUrl)
+                        .placeholder(R.drawable.ic_person_large)
+                        .into(ivProfileImage);
+            } else {
+                try {
+                    byte[] imageBytes = Base64.decode(imageUrl, Base64.DEFAULT);
+                    Glide.with(this)
+                            .asBitmap()
+                            .load(imageBytes)
+                            .placeholder(R.drawable.ic_person_large)
+                            .into(ivProfileImage);
+                } catch (Exception e) {
+                    ivProfileImage.setImageResource(R.drawable.ic_person_large);
+                    Log.e("ProfileActivity", "Error decodificando imagen Base64", e);
+                }
+            }
             ivProfileImage.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
             ivProfileImage.setPadding(0, 0, 0, 0);
         }

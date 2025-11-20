@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -365,14 +367,27 @@ public class CreateRecipeActivity extends AppCompatActivity {
         etRecipeName.setText(recipe.getTitle());
         etDescription.setText(recipe.getDescription());
 
-        // Imagen
         if (recipe.getImageUrl() != null && !recipe.getImageUrl().isEmpty()) {
             imageBase64 = recipe.getImageUrl();
-            // Cargar imagen con Glide
-            com.bumptech.glide.Glide.with(this)
-                .load(recipe.getImageUrl())
-                .into(ivRecipePreview);
-            ivRecipePreview.setVisibility(View.VISIBLE);
+            String imageUrl = recipe.getImageUrl();
+            if (imageUrl.startsWith("http")) {
+                com.bumptech.glide.Glide.with(this)
+                    .load(imageUrl)
+                    .into(ivRecipePreview);
+                ivRecipePreview.setVisibility(View.VISIBLE);
+            } else {
+                try {
+                    byte[] imageBytes = Base64.decode(imageUrl, Base64.DEFAULT);
+                    com.bumptech.glide.Glide.with(this)
+                        .asBitmap()
+                        .load(imageBytes)
+                        .into(ivRecipePreview);
+                    ivRecipePreview.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                    Log.e("CreateRecipeActivity", "Error decodificando imagen Base64", e);
+                    ivRecipePreview.setVisibility(View.GONE);
+                }
+            }
         }
 
         // Pasos

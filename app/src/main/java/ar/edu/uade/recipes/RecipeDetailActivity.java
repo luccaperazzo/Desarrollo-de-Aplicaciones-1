@@ -2,6 +2,8 @@ package ar.edu.uade.recipes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -246,14 +248,32 @@ public class RecipeDetailActivity extends AppCompatActivity {
         // Descripción
         tvRecipeDescription.setText(recipe.getDescription());
 
-        // Imagen
-        if (recipe.getImageUrl() != null && !recipe.getImageUrl().isEmpty()) {
-            Glide.with(this)
-                    .load(recipe.getImageUrl())
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .error(R.drawable.ic_launcher_background)
-                    .centerCrop()
-                    .into(ivRecipeImage);
+        String imageUrl = recipe.getImageUrl();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            if (imageUrl.startsWith("http")) {
+                Glide.with(this)
+                        .load(imageUrl)
+                        .placeholder(R.drawable.ic_launcher_background)
+                        .error(R.drawable.ic_launcher_background)
+                        .centerCrop()
+                        .into(ivRecipeImage);
+            } else {
+                try {
+                    byte[] imageBytes = Base64.decode(imageUrl, Base64.DEFAULT);
+                    Glide.with(this)
+                            .asBitmap()
+                            .load(imageBytes)
+                            .placeholder(R.drawable.ic_launcher_background)
+                            .error(R.drawable.ic_launcher_background)
+                            .centerCrop()
+                            .into(ivRecipeImage);
+                } catch (Exception e) {
+                    ivRecipeImage.setImageResource(R.drawable.ic_launcher_background);
+                    Log.e("RecipeDetailActivity", "Error decodificando imagen Base64", e);
+                }
+            }
+        } else {
+            ivRecipeImage.setImageResource(R.drawable.ic_launcher_background);
         }
 
         // Si es receta propia, ocultar favorito y rating del usuario, mostrar botones de edición/borrado
