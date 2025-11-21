@@ -62,9 +62,8 @@ public class ProfileActivity extends AppCompatActivity {
     private AuthService authService;
 
     private ActivityResultLauncher<Intent> cameraLauncher;
-    private ActivityResultLauncher<Intent> galleryLauncher;
+    private ActivityResultLauncher<String> galleryLauncher;
     private ActivityResultLauncher<String> requestCameraPermissionLauncher;
-    private ActivityResultLauncher<String> requestGalleryPermissionLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,16 +125,15 @@ public class ProfileActivity extends AppCompatActivity {
                 }
         );
 
-        // Launcher para la galería
+        // Launcher para la galería (usando GetContent - no requiere permisos)
         galleryLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Uri selectedImageUri = result.getData().getData();
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
                         try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                             // Corregir orientación EXIF
-                            Bitmap correctedBitmap = ImageHelper.fixImageOrientation(this, selectedImageUri, bitmap);
+                            Bitmap correctedBitmap = ImageHelper.fixImageOrientation(this, uri, bitmap);
                             processImage(correctedBitmap);
                         } catch (IOException e) {
                             Log.e("ProfileActivity", "Error loading image from gallery", e);
@@ -151,18 +149,6 @@ public class ProfileActivity extends AppCompatActivity {
                 isGranted -> {
                     if (isGranted) {
                         openCamera();
-                    } else {
-                        Toast.makeText(this, getString(R.string.register_error_permission_denied), Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
-
-        // Launcher para el permiso de la galería
-        requestGalleryPermissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if (isGranted) {
-                        openGallery();
                     } else {
                         Toast.makeText(this, getString(R.string.register_error_permission_denied), Toast.LENGTH_SHORT).show();
                     }
@@ -293,7 +279,7 @@ public class ProfileActivity extends AppCompatActivity {
             if (which == 0) {
                 checkCameraPermission();
             } else {
-                checkGalleryPermission();
+                openGallery();
             }
         });
         builder.show();
@@ -314,28 +300,8 @@ public class ProfileActivity extends AppCompatActivity {
         cameraLauncher.launch(intent);
     }
 
-    private void checkGalleryPermission() {
-        // Verifica si tenemos permiso de galería
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestGalleryPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES);
-            } else {
-                openGallery();
-            }
-        } else {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestGalleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
-            } else {
-                openGallery();
-            }
-        }
-    }
-
     private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        galleryLauncher.launch(intent);
+        galleryLauncher.launch("image/*");
     }
 
     private void processImage(Bitmap bitmap) {
