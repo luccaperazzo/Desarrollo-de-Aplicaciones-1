@@ -1,3 +1,210 @@
 <resources>
-    <string name="app_name">UADE Recipes App</string>
+    <string name="app_name">Cookly</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_page1_title">Bienvenido a Cookly</string>
+    <string name="onboarding_page1_description">Tu asistente personal de recetas</string>
+    <string name="onboarding_page2_title">Encontrá recetas</string>
+    <string name="onboarding_page2_description">Agregá futuras recetas a tu lista para tenerlas siempre disponibles</string>
+    <string name="onboarding_page3_title">Creá tus recetas</string>
+    <string name="onboarding_page3_description">Y publicalas para que todo el mundo las vea</string>
+    <string name="onboarding_button_next">Siguiente</string>
+    <string name="onboarding_button_finish">Terminar</string>
+    <string name="onboarding_button_skip">Saltear</string>
+    <string name="onboarding_button_back">Atrás</string>
+
+    <!-- LoginActivity -->
+    <string name="login_btn_login">Ingresar</string>
+    <string name="login_btn_register">No tengo una cuenta</string>
+    <string name="login_success">Logueado!</string>
+    <string name="login_error_invalid_credentials">Credenciales inválidas!</string>
+    <string name="login_error_network">Error de red. Verifique su conexión.</string>
+
+    <!-- RegisterActivity -->
+    <string name="register_title">Crear Cuenta</string>
+    <string name="register_hint_username">Usuario</string>
+    <string name="register_hint_full_name">Nombre Completo</string>
+    <string name="register_hint_email">Email</string>
+    <string name="register_hint_password">Contraseña</string>
+    <string name="register_hint_confirm_password">Confirmar contraseña</string>
+    <string name="register_profile_image_description">Imagen de perfil</string>
+    <string name="register_edit_profile_image">Editar imagen de perfil</string>
+    <string name="register_btn_select_profile_image">Seleccionar foto de perfil (opcional)</string>
+    <string name="register_profile_image_selected">Foto seleccionada ✓</string>
+    <string name="register_checkbox_terms">Acepto los Términos y Condiciones</string>
+    <string name="register_btn_register">Registrarme</string>
+    <string name="register_btn_already_have_account">Ya tengo cuenta</string>
+    <string name="register_error_passwords_dont_match">Las contraseñas no coinciden</string>
+    <string name="register_error_passwords_not_match">Las contraseñas no coinciden</string>
+    <string name="register_error_invalid_email">Email inválido</string>
+    <string name="register_error_empty_email">El email es requerido</string>
+    <string name="register_error_empty_username">El nombre de usuario es requerido</string>
+    <string name="register_error_empty_full_name">El nombre completo es requerido</string>
+    <string name="register_error_short_password">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="register_error_password_lowercase">La contraseña debe contener al menos una minúscula</string>
+    <string name="register_error_password_uppercase">La contraseña debe contener al menos una mayúscula</string>
+    <string name="register_error_password_number">La contraseña debe contener al menos un número</string>
+    <string name="register_error_invalid_password">La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número</string>
+    <string name="register_success">Registro exitoso! Puedes iniciar sesión.</string>
+    <string name="register_error_title">Error al registrar</string>
+    <string name="register_error_network">Error de red. Verifique su conexión.</string>
+    <string name="register_dialog_select_image_title">Seleccionar imagen</string>
+    <string name="register_dialog_option_camera">Cámara</string>
+    <string name="register_dialog_option_gallery">Galería</string>
+    <string name="register_error_permission_denied">Permiso requerido para seleccionar imagen</string>
+    <string name="register_error_processing_image">Error al procesar imagen</string>
+    <string name="register_msg_returning_to_login">Volviendo al login</string>
+
+    <!-- Empty States -->
+    <string name="empty_state_title">No hay recetas</string>
+    <string name="empty_state_message">No se encontraron recetas</string>
+    <string name="empty_state_no_results">No se encontraron resultados para tu búsqueda</string>
+    <string name="empty_state_no_favorites">Aún no tienes recetas favoritas</string>
+    <string name="empty_state_no_my_recipes">Aún no has creado ninguna receta</string>
+
+    <!-- Error States -->
+    <string name="error_state_title">Error de conexión</string>
+    <string name="error_state_message">No se pudieron cargar las recetas</string>
+    <string name="error_state_retry">Reintentar</string>
+    <string name="error_state_offline_with_cache">Sin conexión. Mostrando recetas guardadas.</string>
+    <string name="error_state_offline_no_cache">Sin conexión y no hay recetas guardadas.</string>
+    <string name="error_server">Error del servidor</string>
+    <string name="error_connection">Error de conexión</string>
+    <string name="error_no_connection">Sin conexión</string>
+
+    <!-- HomeActivity -->
+    <string name="home_title_explore">Explorar</string>
+    <string name="home_title_my_recipes">Mis Recetas</string>
+    <string name="home_title_favorites">Favoritas</string>
+    <string name="home_search_hint">Buscar recetas…</string>
+    <string name="home_fab_add_recipe">Agregar receta (mock)</string>
+
+    <!-- Recipe Item -->
+    <string name="recipe_author_prefix">Por: %1$s</string>
+
+    <!-- Recipe Detail -->
+    <string name="recipe_detail_image_description">Imagen de la receta</string>
+    <string name="recipe_detail_favorite_description">Agregar a favoritos</string>
+    <string name="recipe_detail_avg_rating_label">Calificación:</string>
+    <string name="recipe_detail_user_rating_label">Tu calificación:</string>
+    <string name="recipe_detail_star_description">Estrella de calificación</string>
+    <string name="recipe_detail_rating_format">%.1f</string>
+    <string name="recipe_detail_description_label">Descripción</string>
+    <string name="recipe_detail_ingredients_label">Ingredientes</string>
+    <string name="recipe_detail_steps_label">Pasos a seguir</string>
+    <string name="recipe_detail_add_to_cart">Agregar ingredientes al carrito</string>
+    <string name="recipe_detail_step_prefix">Paso %1$d</string>
+    <string name="recipe_detail_ingredient_format">%1$s %2$s de %3$s</string>
+    <string name="recipe_detail_ingredient_bullet">• </string>
+    <string name="recipe_detail_error_title">Error al cargar receta</string>
+    <string name="recipe_detail_error_load">Error al cargar la receta</string>
+    <string name="recipe_detail_error_message">No se pudo cargar la receta. ¿Deseas reintentar?</string>
+    <string name="recipe_detail_error_retry">Reintentar</string>
+    <string name="recipe_detail_error_back">Volver</string>
+    <string name="recipe_detail_error_connection">Error de conexión</string>
+    <string name="recipe_detail_no_ingredients">No hay ingredientes para agregar</string>
+    <string name="recipe_detail_cart_mock">Funcionalidad de carrito próximamente</string>
+    <string name="recipe_detail_favorite_added">Agregado a favoritos</string>
+    <string name="recipe_detail_favorite_removed">Eliminado de favoritos</string>
+    <string name="recipe_detail_rating_added">Calificación agregada</string>
+    <string name="recipe_detail_rating_updated">Calificación actualizada</string>
+    <string name="recipe_detail_rating_error">Error al guardar la calificación</string>
+
+    <!-- Create Recipe -->
+    <string name="create_recipe_title">Nueva Receta</string>
+    <string name="create_recipe_upload_image">Subir imagen de la receta</string>
+    <string name="create_recipe_image_preview">Vista previa de la imagen</string>
+    <string name="create_recipe_name_hint">Nombre de la receta</string>
+    <string name="create_recipe_description_hint">Descripción</string>
+    <string name="create_recipe_steps_label">Pasos</string>
+    <string name="create_recipe_step_hint">Paso</string>
+    <string name="create_recipe_add_step">Agregar paso</string>
+    <string name="create_recipe_remove_step">Eliminar paso</string>
+    <string name="create_recipe_ingredients_label">Ingredientes</string>
+    <string name="create_recipe_ingredient_name_hint">ingrediente</string>
+    <string name="create_recipe_quantity_hint">cantidad</string>
+    <string name="create_recipe_unit_hint">ml</string>
+    <string name="create_recipe_add_ingredient">Agregar ingrediente</string>
+    <string name="create_recipe_remove_ingredient">Eliminar ingrediente</string>
+    <string name="create_recipe_save">Guardar</string>
+    <string name="create_recipe_error_empty_fields">Por favor completa todos los campos</string>
+    <string name="create_recipe_error_empty_steps">Debes agregar al menos un paso</string>
+    <string name="create_recipe_error_empty_ingredients">Debes agregar al menos un ingrediente</string>
+    <string name="create_recipe_error_no_image">Debes seleccionar una imagen</string>
+    <string name="create_recipe_success">Receta creada exitosamente</string>
+    <string name="create_recipe_error">Error al crear la receta</string>
+    <string name="create_recipe_select_image_title">Seleccionar imagen</string>
+    <string name="create_recipe_option_camera">Cámara</string>
+    <string name="create_recipe_option_gallery">Galería</string>
+
+    <!-- Edit Recipe -->
+    <string name="edit_recipe_title">Editar Receta</string>
+    <string name="edit_recipe_success">Receta actualizada exitosamente</string>
+    <string name="edit_recipe_error">Error al actualizar la receta</string>
+
+    <!-- Delete Recipe -->
+    <string name="delete_recipe_title">Eliminar receta</string>
+    <string name="delete_recipe_message">¿Estás seguro de que deseas eliminar esta receta? Esta acción no se puede deshacer.</string>
+    <string name="delete_recipe_confirm">Eliminar</string>
+    <string name="delete_recipe_cancel">Cancelar</string>
+    <string name="delete_recipe_success">Receta eliminada exitosamente</string>
+    <string name="delete_recipe_error">Error al eliminar la receta</string>
+    <string name="recipe_detail_edit">Editar</string>
+    <string name="recipe_detail_delete">Eliminar</string>
+
+    <!-- Drawer Menu -->
+    <string name="drawer_hello">Hola, %1$s</string>
+    <string name="drawer_my_profile">Mi perfil</string>
+    <string name="drawer_my_cart">Mi carrito</string>
+    <string name="drawer_logout">Cerrar sesión</string>
+    <string name="drawer_logout_confirm_title">Cerrar sesión</string>
+    <string name="drawer_logout_confirm_message">¿Estás seguro de que deseas cerrar sesión?</string>
+    <string name="drawer_logout_confirm_yes">Cerrar sesión</string>
+    <string name="drawer_logout_confirm_no">Cancelar</string>
+
+    <!-- Profile Activity -->
+    <string name="profile_title">Mi Perfil</string>
+    <string name="profile_save">Guardar cambios</string>
+    <string name="profile_success">Perfil actualizado exitosamente</string>
+    <string name="profile_error">Error al actualizar el perfil</string>
+    <string name="profile_password_hint">Nueva contraseña (opcional)</string>
+    <string name="profile_confirm_password_hint">Confirmar nueva contraseña</string>
+
+    <!-- Cart Activity -->
+    <string name="cart_title">Carrito de Compras</string>
+    <string name="cart_empty_state_title">Carrito vacío</string>
+    <string name="cart_empty_state_message">Agrega ingredientes desde las recetas o manualmente</string>
+    <string name="cart_add_item">Agregar ingrediente</string>
+    <string name="cart_delete_item">Eliminar ingrediente</string>
+    <string name="cart_add_item_dialog_title">Agregar ingrediente</string>
+    <string name="cart_add_item_dialog_add">Agregar</string>
+    <string name="cart_add_item_dialog_cancel">Cancelar</string>
+    <string name="cart_item_name_hint">Nombre del ingrediente</string>
+    <string name="cart_item_quantity_hint">Cantidad</string>
+    <string name="cart_error_empty_fields">Por favor completa todos los campos</string>
+    <string name="cart_item_added">Ingrediente agregado</string>
+    <string name="cart_item_deleted">Ingrediente eliminado</string>
+    <string name="cart_delete_confirmation_title">Eliminar ingrediente</string>
+    <string name="cart_delete_confirmation_message">¿Estás seguro de que deseas eliminar este ingrediente?</string>
+    <string name="cart_delete_confirmation_yes">Eliminar</string>
+    <string name="cart_delete_confirmation_no">Cancelar</string>
+    <string name="cart_ingredients_added">Ingredientes agregados al carrito</string>
+    <string name="cart_ingredients_added_count">Ingredientes agregados al carrito (%1$d)</string>
+
+    <!-- Accessibility Descriptions -->
+    <string name="content_desc_app_logo">Logo de la aplicación</string>
+    <string name="content_desc_theme_mode">Icono de modo de tema</string>
+    <string name="content_desc_dark_mode_switch">Cambiar a modo oscuro</string>
+    <string name="content_desc_add_recipe">Agregar nueva receta</string>
+    <string name="content_desc_recipe_image">Imagen de la receta</string>
+    <string name="content_desc_back_button">Volver</string>
+    <string name="content_desc_menu_button">Abrir menú</string>
+    <string name="content_desc_search">Buscar recetas</string>
+    <string name="content_desc_loading">Cargando</string>
+    <string name="content_desc_cart_item_checkbox">Marcar ingrediente como completado</string>
+
+    <!-- Bottom Navigation -->
+    <string name="bottom_nav_explore">Explorar</string>
+    <string name="bottom_nav_my_recipes">Mis recetas</string>
+    <string name="bottom_nav_favorites">Favoritas</string>
 </resources>
